@@ -171,6 +171,7 @@ auto host_data() {
     }
 #endif
 
+/* this throws an error (storage_ptr is not defined)
 #if defined(USE_OPENCL) || defined(USE_CUDA)
   const void *device_data() const {
     storage_ptr_->toDevice();
@@ -184,7 +185,7 @@ auto host_data() {
     return (*storage_ptr_->device_data_)();
   }
 #endif
-
+*/
   /**
    * Fill tensor with particular value
    * @param value
