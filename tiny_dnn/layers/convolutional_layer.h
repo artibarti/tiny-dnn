@@ -15,8 +15,6 @@
 
 #include "tiny_dnn/core/kernels/conv2d_grad_op.h"
 #include "tiny_dnn/core/kernels/conv2d_op.h"
-#include "tiny_dnn/core/kernels/conv2d_op_libdnn.h"
-#include "tiny_dnn/core/kernels/conv2d_op_opencl.h"
 
 #include "tiny_dnn/util/util.h"
 
@@ -311,9 +309,10 @@ class convolutional_layer : public layer {
    *in_data[i])
    **/
   void back_propagation(const std::vector<tensor_t *> &in_data,
-                        const std::vector<tensor_t *> &out_data,
-                        std::vector<tensor_t *> &out_grad,
-                        std::vector<tensor_t *> &in_grad) override {
+    const std::vector<tensor_t *> &out_data,
+    std::vector<tensor_t *> &out_grad,
+    std::vector<tensor_t *> &in_grad) override {
+    
     bwd_in_data_.resize(in_data.size());
     std::copy(in_data.begin(), in_data.end(), bwd_in_data_.begin());
     bwd_in_data_[0] = in_data_padded(in_data);
@@ -338,14 +337,13 @@ class convolutional_layer : public layer {
 
   void set_sample_count(size_t sample_count) override {
     layer::set_sample_count(sample_count);
-    cws_.prev_delta_padded_.resize(sample_count,
-                                   vec_t(params_.in_padded.size(), float_t(0)));
+    cws_.prev_delta_padded_.resize(sample_count, vec_t(params_.in_padded.size(), float_t(0)));
   }
 
   std::vector<index3d<size_t>> in_shape() const override {
+    
     if (params_.has_bias) {
-      return {params_.in, params_.weight,
-              index3d<size_t>(1, 1, params_.out.depth_)};
+      return {params_.in, params_.weight, index3d<size_t>(1, 1, params_.out.depth_)};
     } else {
       return {params_.in, params_.weight};
     }
@@ -356,30 +354,6 @@ class convolutional_layer : public layer {
   }
 
   std::string layer_type() const override { return std::string("conv"); }
-
-  // TODO(edgar): check this
-  std::string kernel_file() const override {
-    return std::string(
-      "../tiny_cnn/core/kernels/cl_kernels/conv_layer_spatial.cl");
-  }
-
-  // TODO(edgar): is it really needed?
-  std::string kernel_header() const override {
-    std::stringstream ss;
-    ss << "#define MULTI\n";
-    ss << "#define KERNEL_H " << params_.weight.height_ << "\n";
-    ss << "#define KERNEL_W " << params_.weight.width_ << "\n";
-    ss << "#define CHANNELS " << params_.weight.depth_ << "\n";
-    ss << "#define STRIDE_H " << params_.h_stride << "\n";
-    ss << "#define STRIDE_W " << params_.w_stride << "\n";
-    ss << "#define DILATION_H " << params_.h_dilation << "\n";
-    ss << "#define DILATION_W " << params_.w_dilation << "\n";
-    ss << "#define APPLY_BIAS " << params_.has_bias << "\n";
-    ss << "#define OUTPUT_Z " << params_.out.depth_ << "\n";
-    // TODO(edgar): REVISE THIS
-    ss << "#define ZPAR " << params_.out.depth_ << "\n";
-    return ss.str();
-  }
 
 #ifdef DNN_USE_IMAGE_API
   image<> weight_to_image() const {
@@ -424,30 +398,23 @@ class convolutional_layer : public layer {
   friend struct serialization_buddy;
 
  private:
+  
   tensor_t *in_data_padded(const std::vector<tensor_t *> &in) {
-    return (params_.pad_type == padding::valid) ? in[0]
-                                                : &cws_.prev_out_padded_;
+    return (params_.pad_type == padding::valid) ? in[0] : &cws_.prev_out_padded_;
   }
 
-  void conv_set_params(
-    const shape3d &in,
-    size_t w_width,
-    size_t w_height,
-    size_t outc,
-    padding ptype,
-    bool has_bias,
-    size_t w_stride,
-    size_t h_stride,
-    size_t w_dilation,
-    size_t h_dilation,
+  void conv_set_params(const shape3d &in, size_t w_width, size_t w_height,
+    size_t outc, padding ptype, bool has_bias, size_t w_stride,
+    size_t h_stride, size_t w_dilation, size_t h_dilation,
     const core::connection_table &tbl = core::connection_table()) {
+    
     params_.in = in;
-    params_.in_padded =
-      shape3d(in_length(in.width_, w_width, ptype),
-              in_length(in.height_, w_height, ptype), in.depth_);
-    params_.out = shape3d(
-      conv_out_length(in.width_, w_width, w_stride, w_dilation, ptype),
+    
+    params_.in_padded = shape3d(in_length(in.width_, w_width, ptype),
+      in_length(in.height_, w_height, ptype), in.depth_);
+    params_.out = shape3d( conv_out_length(in.width_, w_width, w_stride, w_dilation, ptype),
       conv_out_length(in.height_, w_height, h_stride, h_dilation, ptype), outc);
+    
     params_.weight     = shape3d(w_width, w_height, in.depth_ * outc);
     params_.has_bias   = has_bias;
     params_.pad_type   = ptype;
@@ -459,73 +426,49 @@ class convolutional_layer : public layer {
 
     // init padding buffer
     if (params_.pad_type == padding::same) {
-      cws_.prev_delta_padded_.resize(
-        1, vec_t(params_.in_padded.size(), float_t(0)));
+      cws_.prev_delta_padded_.resize(1, vec_t(params_.in_padded.size(), float_t(0)));
     }
 
     // set parameters to padding operation
     padding_op_ = core::Conv2dPadding(params_);
   }
 
-  size_t in_length(size_t in_length,
-                   size_t window_size,
-                   padding pad_type) const {
-    return pad_type == padding::same ? (in_length + window_size - 1)
-                                     : in_length;
+  size_t in_length(size_t in_length, size_t window_size, padding pad_type) const {
+    return pad_type == padding::same ? (in_length + window_size - 1) : in_length;
   }
 
-  static size_t conv_out_dim(size_t in_width,
-                             size_t in_height,
-                             size_t window_size,
-                             size_t w_stride,
-                             size_t h_stride,
-                             size_t w_dilation,
-                             size_t h_dilation,
-                             padding pad_type) {
-    return conv_out_length(in_width, window_size, w_stride, w_dilation,
-                           pad_type) *
-           conv_out_length(in_height, window_size, h_stride, h_dilation,
-                           pad_type);
+  static size_t conv_out_dim(size_t in_width, size_t in_height,
+    size_t window_size, size_t w_stride, size_t h_stride, size_t w_dilation,
+    size_t h_dilation, padding pad_type) {
+    
+    return conv_out_length(in_width, window_size, w_stride, w_dilation, pad_type) *
+            conv_out_length(in_height, window_size, h_stride, h_dilation, pad_type);
   }
 
-  size_t conv_out_dim(size_t in_width,
-                      size_t in_height,
-                      size_t window_width,
-                      size_t window_height,
-                      size_t w_stride,
-                      size_t h_stride,
-                      size_t w_dilation,
-                      size_t h_dilation,
-                      padding pad_type) const {
-    return conv_out_length(in_width, window_width, w_stride, w_dilation,
-                           pad_type) *
-           conv_out_length(in_height, window_height, h_stride, h_dilation,
-                           pad_type);
+  size_t conv_out_dim(size_t in_width, size_t in_height, size_t window_width,
+    size_t window_height, size_t w_stride, size_t h_stride, size_t w_dilation,
+    size_t h_dilation, padding pad_type) const {
+    
+    return conv_out_length(in_width, window_width, w_stride, w_dilation, pad_type) *
+           conv_out_length(in_height, window_height, h_stride, h_dilation, pad_type);
   }
 
-  void createOp() override { init_backend(layer::engine()); }
+  void createOp() override {
+    init_backend(layer::engine());
+  }
 
   void init_backend(const core::backend_t backend_type) {
-    core::OpKernelConstruction ctx =
-      core::OpKernelConstruction(layer::device(), &params_);
+    
+    core::OpKernelConstruction ctx = core::OpKernelConstruction(&params_);
 
     if (backend_type == core::backend_t::internal ||
         backend_type == core::backend_t::nnpack ||
         backend_type == core::backend_t::avx) {
+      
       kernel_fwd_.reset(new Conv2dOp(ctx));
       kernel_back_.reset(new Conv2dGradOp(ctx));
       return;
-    } else if (backend_type == core::backend_t::opencl) {
-      throw nn_error("Not implemented engine: " + to_string(backend_type));
-      /*kernel_fwd_.reset(new Conv2dOpenCLForwardOp(ctx));
-      kernel_back_.reset(new Conv2dOpenCLBackwardOp(ctx));
-      return;*/
-    } else if (backend_type == core::backend_t::libdnn) {
-      if (layer::device() == nullptr) return;
-      kernel_fwd_.reset(new Conv2dLibDNNForwardOp(ctx));
-      kernel_back_.reset(new Conv2dLibDNNBackwardOp(ctx));
-      return;
-    } else {
+    }  else {
       throw nn_error("Not supported engine: " + to_string(backend_type));
     }
   }

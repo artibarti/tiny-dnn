@@ -114,7 +114,7 @@ class global_average_pooling_layer : public layer {
 
   void init_backend(core::backend_t backend_type) {
     core::OpKernelConstruction ctx =
-      core::OpKernelConstruction(layer::device(), &params_);
+      core::OpKernelConstruction(&params_);
 
     layer::set_backend_type(backend_type);
     if (backend_type == core::backend_t::avx) {

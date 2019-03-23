@@ -11,11 +11,6 @@
 #include "tiny_dnn/network.h"
 #include "tiny_dnn/nodes.h"
 
-#include "tiny_dnn/core/framework/tensor.h"
-
-#include "tiny_dnn/core/framework/device.h"
-#include "tiny_dnn/core/framework/program_manager.h"
-
 #include "tiny_dnn/activations/asinh_layer.h"
 #include "tiny_dnn/activations/elu_layer.h"
 #include "tiny_dnn/activations/leaky_relu_layer.h"

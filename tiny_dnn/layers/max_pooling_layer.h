@@ -162,10 +162,6 @@ class max_pooling_layer : public layer {
 
   std::string layer_type() const override { return std::string("max-pool"); }
 
-  std::string kernel_file() const override {
-    return std::string("../tiny_cnn/core/kernels/cl_kernels/pooling.cl");
-  }
-
   std::pair<size_t, size_t> pool_size() const {
     return std::make_pair(params_.pool_size_x, params_.pool_size_y);
   }
@@ -236,7 +232,7 @@ class max_pooling_layer : public layer {
 
   void init_backend(core::backend_t backend_type) {
     core::OpKernelConstruction ctx =
-      core::OpKernelConstruction(layer::device(), &params_);
+      core::OpKernelConstruction(&params_);
 
     if (backend_type == core::backend_t::internal ||
         backend_type == core::backend_t::nnpack ||

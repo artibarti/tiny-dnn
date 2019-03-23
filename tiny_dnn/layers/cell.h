@@ -8,7 +8,6 @@
 #pragma once
 #include <vector>
 #include "tiny_dnn/core/backend.h"
-#include "tiny_dnn/core/framework/device.fwd.h"
 
 namespace tiny_dnn {
 

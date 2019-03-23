@@ -127,7 +127,11 @@ UpgradeLog*.XML
 ###############
 
 .vscode/*
-.vscode
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history
 
 ############
 ## Windows
@@ -226,4 +230,4 @@ docs/_build
 CMakeFiles*
 build*
 DartConfiguration.tcl
-
+build/*

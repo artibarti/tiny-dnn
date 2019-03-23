@@ -154,7 +154,7 @@ class rnn_cell : public cell {
     cell::set_wrapper(wrapper);
     CNN_UNREFERENCED_PARAMETER(cell::wrapper_->engine());
     core::OpKernelConstruction ctx =
-      core::OpKernelConstruction(cell::wrapper_->device(), &params_);
+      core::OpKernelConstruction(&params_);
     kernel_fwd_.reset(new RecurrentCellOp(ctx));
     kernel_back_.reset(new RecurrentCellGradOp(ctx));
   }

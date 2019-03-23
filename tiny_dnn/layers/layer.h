@@ -20,7 +20,6 @@
 #include <vector>
 
 #include "tiny_dnn/core/backend.h"
-#include "tiny_dnn/core/framework/device.fwd.h"
 #include "tiny_dnn/node.h"
 
 #include "tiny_dnn/util/parallel_for.h"
@@ -90,29 +89,14 @@ class layer : public node {
     backend_type_ = backend_type;
   }
 
-  /////////////////////////////////////////////////////////////////////////
-  // getter
+  // getters
 
   bool parallelize() const { return parallelize_; }
 
   // TODO(edgar): Deprecated: use the below method
   core::backend_t backend_type() const { return backend_->type(); }
-
   core::backend_t engine() const { return backend_type_; }
-
-  virtual std::string kernel_file() const {
-    return std::string("empty_kernel_str");
-  }
-
-  virtual std::string kernel_header() const { return std::string(); }
-
   virtual void createOp() {}
-
-  void setDevice(const Device &device) {
-    device_ptr_ = const_cast<Device *>(&device);
-  }
-
-  Device *device() const { return device_ptr_; }
 
   std::shared_ptr<core::backend> backend() { return backend_; }
 
@@ -123,19 +107,16 @@ class layer : public node {
   size_t out_channels() const { return out_channels_; }
 
   size_t in_data_size() const {
-    return sumif(in_shape(),
-                 [&](size_t i) {  // NOLINT
-                   return in_type_[i] == vector_type::data;
-                 },
-                 [](const shape3d &s) { return s.size(); });
+    
+    return sumif(in_shape(), [&](size_t i) {  // NOLINT 
+      return in_type_[i] == vector_type::data; },
+      [](const shape3d &s) { return s.size(); });
   }
 
   size_t out_data_size() const {
-    return sumif(out_shape(),
-                 [&](size_t i) {  // NOLINT
-                   return out_type_[i] == vector_type::data;
-                 },
-                 [](const shape3d &s) { return s.size(); });
+    return sumif(out_shape(), [&](size_t i) {  // NOLINT
+      return out_type_[i] == vector_type::data; },
+      [](const shape3d &s) { return s.size(); });
   }
 
   std::vector<shape3d> in_data_shape() {
@@ -746,8 +727,8 @@ class layer : public node {
   core::backend_t backend_type_;
   /** The backend instance (deprecated) */
   std::shared_ptr<core::backend> backend_;
-  /** Pointer to the device on which the layer/node will run */
-  Device *device_ptr_ = nullptr;
+  
+
   /** Used in update_weight method. Kept as a member variable to reduce
    * frequent
    * memory allocation */

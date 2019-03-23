@@ -104,7 +104,7 @@ class fully_connected_layer : public layer {
 
   void init_backend(core::backend_t backend_type) {
     core::OpKernelConstruction ctx =
-      core::OpKernelConstruction(layer::device(), &params_);
+      core::OpKernelConstruction(&params_);
 
     if (backend_type == core::backend_t::internal ||
         backend_type == core::backend_t::avx ||
