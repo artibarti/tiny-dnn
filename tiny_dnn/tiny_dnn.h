@@ -69,6 +69,10 @@
 #include "tiny_dnn/util/image.h"
 #endif  // DNN_USE_IMAGE_API
 
+#ifdef USE_OPENCL
+#include "tiny_dnn/opencl_util/opencl_util.h"
+#endif // USE_OPENCL
+
 #ifndef CNN_NO_SERIALIZATION
 #include "tiny_dnn/util/deserialization_helper.h"
 #include "tiny_dnn/util/serialization_helper.h"

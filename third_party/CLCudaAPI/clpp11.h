@@ -122,6 +122,8 @@ using EventPointer = cl_event*;
 class Platform {
  public:
 
+  explicit Platform() {}
+
   // Constructor based on the regular OpenCL data-type
   explicit Platform(const cl_platform_id platform): platform_(platform) { }
 
@@ -165,6 +167,8 @@ inline std::vector<Platform> GetAllPlatforms() {
 // C++11 version of 'cl_device_id'
 class Device {
  public:
+
+  explicit Device() {}
 
   // Constructor based on the regular OpenCL data-type
   explicit Device(const cl_device_id device): device_(device) { }
@@ -291,6 +295,8 @@ class Device {
 class Context {
  public:
 
+  explicit Context() {}
+
   // Constructor based on the regular OpenCL data-type: memory management is handled elsewhere
   explicit Context(const cl_context context):
       context_(new cl_context) {
@@ -325,6 +331,8 @@ enum class BuildStatus { kSuccess, kError, kInvalid };
 class Program {
  public:
   // Note that there is no constructor based on the regular OpenCL data-type because of extra state
+
+  explicit Program() {}
 
   // Source-based constructor with memory management
   explicit Program(const Context &context, std::string source):
@@ -406,6 +414,8 @@ class Program {
 // C++11 version of 'cl_command_queue'
 class Queue {
  public:
+
+  explicit Queue() {}
 
   // Constructor based on the regular OpenCL data-type: memory management is handled elsewhere
   explicit Queue(const cl_command_queue queue):

@@ -7,7 +7,7 @@
 */
 #pragma once
 
-#include "tiny_dnn/core/framework/op_kernel.h"
+#include "tiny_dnn/core/op_kernel.h"
 
 #include "tiny_dnn/core/kernels/fully_connected_op_avx.h"
 #include "tiny_dnn/core/kernels/fully_connected_op_cblas.h"
