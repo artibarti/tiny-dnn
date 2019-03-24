@@ -8,14 +8,23 @@
 #pragma once
 
 #include "tiny_dnn/core/params/fully_params.h"
+#include "tiny_dnn/opencl_util/opencl_util.h"
 
 namespace tiny_dnn {
 namespace kernels {
 
-inline void fully_connected_op_internal(const tensor_t &in_data, const vec_t &W, 
+inline void fully_connected_op_opencl(const tensor_t &in_data, const vec_t &W, 
     const vec_t &bias, tensor_t &out_data, const core::fully_params &params,
     const bool layer_parallelize) {
   
+    CLProgram program = ProgramManager::getInstance()
+        .getProgram("fully_connected_op_opencl.cl");
+    
+    // testing with a noarg kernel
+    CLKernel kernel = program.getKernel("fill");
+    kernel.launch();
+    
+    /* TODO
     for_i(layer_parallelize, in_data.size(), [&](size_t sample) {
         const vec_t &in = in_data[sample];
         vec_t &out      = out_data[sample];
@@ -31,13 +40,15 @@ inline void fully_connected_op_internal(const tensor_t &in_data, const vec_t &W,
             }
         }
     });
+    */
 }
 
-inline void fully_connected_op_internal(const tensor_t &prev_out,
+inline void fully_connected_op_opencl(const tensor_t &prev_out,
     const vec_t &W, tensor_t &dW, tensor_t &db, tensor_t &curr_delta,
     tensor_t &prev_delta, const core::fully_params &params,
     const bool layer_parallelize) {
     
+    /* TODO
     for (size_t sample = 0; sample < prev_out.size(); sample++) {
         for (size_t c = 0; c < params.in_size_; c++) {
             // propagate delta to previous layer
@@ -61,7 +72,8 @@ inline void fully_connected_op_internal(const tensor_t &prev_out,
                 }
             }
         });
-    }
+    } 
+    */
 }
 
 }  // namespace kernels

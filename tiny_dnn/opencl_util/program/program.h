@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 #include "third_party/CLCudaAPI/clpp11.h"
+#include "kernel_function.h"
+#include <iostream>
+#include <stdexcept>
 
 namespace tiny_dnn {
 
@@ -10,41 +13,41 @@ namespace tiny_dnn {
         
         public:
             CLProgram() {}
-            CLProgram(CLCudaAPI::Context context, CLCudaAPI::Device device, std::string source_file);
             
-            CLCudaAPI::Kernel getKerel(std::string kernel_name);
+            CLProgram(CLCudaAPI::Context* context, CLCudaAPI::Device* device, 
+                CLCudaAPI::Queue* queue, std::string source_file);
+            
+            CLKernel getKernel(std::string kernel_name);
             std::string getSourceFile();
 
         private:
-            std::string source_file;
             CLCudaAPI::Program program;
-            std::vector<std::string> compiler_options = std::vector<std::string>{};
+            CLCudaAPI::Context* context;
+            CLCudaAPI::Device* device;
+            CLCudaAPI::Queue* queue;
 
+            std::string source_file;            
+            std::vector<std::string> compiler_options = std::vector<std::string>{};
             std::string loadFileContent(std::string filename);
     };
 
-    CLProgram::CLProgram(CLCudaAPI::Context context, CLCudaAPI::Device device, std::string source_file) {
+    CLProgram::CLProgram(CLCudaAPI::Context* context, CLCudaAPI::Device* device,
+        CLCudaAPI::Queue* queue, std::string source_file) {
         
-        source_file = source_file;
+        this->device = device;
+        this->queue = queue;
+        this->context = context;
+        this->source_file = source_file;
 
-        program = CLCudaAPI::Program(context, loadFileContent(source_file));
+        program = CLCudaAPI::Program(*context, loadFileContent(source_file));        
         
-        program.Build(device, compiler_options);        
-        
-        /*
-        try {
-            program.Build(device, compiler_options);
-        } catch (const CLCudaAPI::CLCudaAPIBuildError e) {
-            if (program.StatusIsCompilationWarningOrError(e.status())) {
-                std::cout << program.GetBuildInfo(device);
-            }            
-            throw;
+        if (program.Build(*device, compiler_options) != CLCudaAPI::BuildStatus::kSuccess) {
+            throw std::runtime_error("Error while compiling kernel: " + source_file);
         }
-        */
     }
 
-    CLCudaAPI::Kernel CLProgram::getKerel(std::string kernel_name) {
-        return CLCudaAPI::Kernel(program, kernel_name);
+    CLKernel CLProgram::getKernel(std::string kernel_name) {
+        return CLKernel(&program, context, queue, kernel_name);
     }
 
     std::string CLProgram::getSourceFile() {
@@ -53,16 +56,22 @@ namespace tiny_dnn {
 
     std::string CLProgram::loadFileContent(std::string filename)
     {
+        const std::string sourceFolderPath
+            = "/home/artibarti/Desktop/szakdoga/tiny-dnn/tiny_dnn/opencl_util/kernels/";
+
   	    std::string result;
-  	    std::ifstream fs(filename.c_str());
+  	    std::ifstream fs((sourceFolderPath + filename).c_str());
   	    
         if (fs.good())
         {
         	std::stringstream is;
             is << fs.rdbuf();
             result = is.str();
-  	    }
+  	    } else {
+            throw std::runtime_error("Can't find " + filename);
+        }
 
   	    return result;
     }
-}
+
+} // namespace tiny_dnn

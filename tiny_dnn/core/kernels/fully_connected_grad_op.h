@@ -11,6 +11,7 @@
 
 #include "tiny_dnn/core/kernels/fully_connected_op_avx.h"
 #include "tiny_dnn/core/kernels/fully_connected_op_internal.h"
+#include "tiny_dnn/core/kernels/fully_connected_op_opencl.h"
 
 namespace tiny_dnn {
 
@@ -44,6 +45,10 @@ class FullyConnectedGradOp : public core::OpKernel {
         prev_delta, params, context.parallelize());
     } else if (engine == core::backend_t::avx) {
       kernels::fully_connected_op_avx(
+        prev_out, W[0], dW, params.has_bias_ ? *db : dummy, curr_delta,
+        prev_delta, params, context.parallelize());
+    } else if (engine == core::backend_t::opencl) {
+      kernels::fully_connected_op_opencl(
         prev_out, W[0], dW, params.has_bias_ ? *db : dummy, curr_delta,
         prev_delta, params, context.parallelize());
     } else {

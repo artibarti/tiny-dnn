@@ -645,6 +645,8 @@ class Buffer {
 class Kernel {
  public:
 
+  explicit Kernel() {}
+
   // Constructor based on the regular OpenCL data-type: memory management is handled elsewhere
   explicit Kernel(const cl_kernel kernel):
       kernel_(new cl_kernel) {
