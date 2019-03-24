@@ -41,8 +41,15 @@ namespace tiny_dnn {
 
         program = CLCudaAPI::Program(*context, loadFileContent(source_file));        
         
-        if (program.Build(*device, compiler_options) != CLCudaAPI::BuildStatus::kSuccess) {
-            throw std::runtime_error("Error while compiling kernel: " + source_file);
+        try {
+            program.Build(*device, compiler_options);
+        } catch (const CLCudaAPI::CLCudaAPIBuildError &e) {
+            if (program.StatusIsCompilationWarningOrError(e.status())) {
+                auto message = program.GetBuildInfo(*device);
+                std::cout << " > Compiler error(s)/warning(s) found: "
+                    << message.c_str() << std::endl;
+            }
+            throw;
         }
     }
 

@@ -14,6 +14,7 @@ namespace tiny_dnn {
 
         public:
             CLKernel() {}
+
             CLKernel(CLCudaAPI::Program* program, CLCudaAPI::Context* context,
                 CLCudaAPI::Queue* queue, std::string kernel_name) {
                 
@@ -23,16 +24,24 @@ namespace tiny_dnn {
                 event = CLCudaAPI::Event();
             }
 
-            void setArgument(int index, vec_t& data) {                
-                auto param = CLCudaAPI::Buffer<float>(*context, *queue, data.begin(), data.end());
-                kernel.SetArgument(index, param);
+            template<typename T>
+            void setArgument(int index,  CLCudaAPI::Buffer<T>* data) {
+                kernel.SetArgument(index, *data);
             }
 
             void launch(std::vector<size_t> global = {512, 1, 1}, 
                 std::vector<size_t> local = {256, 1, 1}) {
-                
+
                 kernel.Launch(*queue, global, local, event.pointer());
                 queue->Finish(event);
+            }
+
+            CLCudaAPI::Context* getContext() {
+                return context;
+            }
+
+            CLCudaAPI::Queue* getQueue() {
+                return queue;
             }
 
         private:

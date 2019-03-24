@@ -1,6 +1,5 @@
 
-//__kernel void fill( __global float* out)
-__kernel void fill()
+__kernel void fill( __global float* out)
 {
     /*
     int bx = get_group_id(0);
