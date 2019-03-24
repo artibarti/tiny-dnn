@@ -7,8 +7,12 @@
 */
 #pragma once
 
+#ifdef USE_OPENCL
+  #include "tiny_dnn/opencl_util/opencl_util.h"
+#endif
+
 #include "tiny_dnn/core/params/fully_params.h"
-#include "tiny_dnn/opencl_util/opencl_util.h"
+#include <iostream>
 
 namespace tiny_dnn {
 namespace kernels {
@@ -16,39 +20,81 @@ namespace kernels {
 inline void fully_connected_op_opencl(const tensor_t &in_data, const vec_t &W, 
     const vec_t &bias, tensor_t &out_data, const core::fully_params &params,
     const bool layer_parallelize) {
-  
-    CLProgram program = ProgramManager::getInstance()
-        .getProgram("fully_connected_op_opencl.cl");
-    
-    // testing with a noarg kernel
-    CLKernel kernel = program.getKernel("fill");
-    kernel.launch();
-    
-    /* TODO
-    for_i(layer_parallelize, in_data.size(), [&](size_t sample) {
-        const vec_t &in = in_data[sample];
-        vec_t &out      = out_data[sample];
 
-        for (size_t i = 0; i < params.out_size_; i++) {
-            out[i] = float_t{0};
-            for (size_t c = 0; c < params.in_size_; c++) {
-                out[i] += W[c * params.out_size_ + i] * in[c];
-            }
+    #ifdef USE_OPENCL
 
-            if (params.has_bias_) {
-                out[i] += bias[i];
+        // OpenCL support is in beta, this code is definitely not the final one
+
+        // read file source and get kernel for matrix multiplication
+        CLProgram program = ProgramManager::getInstance().getProgram("matrix_operations.cl");
+        CLKernel kernel = program.getKernel("matrixMul");
+
+        // this part must be improved... here because tensor_t is a vector os vector type,
+        // first the raw data must be created (another solution is required)
+        vec_t in;
+        for (unsigned int i = 0; i<in_data.size(); i++) {
+            for (unsigned int j = 0; j<in_data[i].size(); j++) {
+                in.push_back(in_data[i][j]);
             }
         }
-    });
-    */
+
+        vec_t out;
+        for (unsigned int i = 0; i<out_data.size(); i++) {
+            for (unsigned int j = 0; j<out_data[i].size(); j++) {
+                out.push_back(out_data[i][j]);
+            }
+        }
+
+        // create device data
+        auto d_in = CLCudaAPI::Buffer<float>(*(kernel.getContext()),
+            *(kernel.getQueue()), in.begin(), in.end());
+        auto d_W = CLCudaAPI::Buffer<float>(*(kernel.getContext()),
+            *(kernel.getQueue()), W.begin(), W.end());
+        auto d_out = CLCudaAPI::Buffer<float>(*(kernel.getContext()),
+            *(kernel.getQueue()), out.begin(), out.end());
+
+        // should be global for the whole project in the future,
+        // must be set according to the gpu capabilities
+        int BLOCK_SIZE = 32;
+
+        // thread configuration
+        std::vector<size_t> local = {32,32,1};    
+        std::vector<size_t> global = {32, 32, 1};
+
+        // add arguments to kernel
+        kernel.setArgument<int>(0, BLOCK_SIZE);
+        kernel.setArgument<float>(1, &d_in);
+        kernel.setArgument<float>(2, &d_W);
+        kernel.setArgument<float>(3, &d_out);
+        kernel.setArgument<int>(4, in_data.size());
+        kernel.setArgument<int>(5, params.in_size_);
+        kernel.setArgument<int>(6, params.in_size_);
+        kernel.setArgument<int>(7, params.out_size_);
+
+        // launch the kernel
+        kernel.launch(global, local);
+
+        // read the result back into out_data 
+        std::vector<float> result(out.size());
+        d_out.Read(*(kernel.getQueue()), out.size(), result);
+
+        for (unsigned int i = 0; i < in_data.size(); i++) {
+            vec_t out_row;
+            for (unsigned int j = 0; j < params.out_size_; j++) {
+                out_row.push_back(result[i * params.out_size_ + j]);
+            }
+            out_data[i] = out_row;
+        }    
+    
+    #else
+        throw tiny_dnn::nn_error("tiny-dnn was not built with Serialization support");
+    #endif
 }
 
-inline void fully_connected_op_opencl(const tensor_t &prev_out,
-    const vec_t &W, tensor_t &dW, tensor_t &db, tensor_t &curr_delta,
-    tensor_t &prev_delta, const core::fully_params &params,
-    const bool layer_parallelize) {
+inline void fully_connected_op_opencl(const tensor_t &prev_out, const vec_t &W,
+    tensor_t &dW, tensor_t &db, tensor_t &curr_delta, tensor_t &prev_delta,
+    const core::fully_params &params, const bool layer_parallelize) {
     
-    /* TODO
     for (size_t sample = 0; sample < prev_out.size(); sample++) {
         for (size_t c = 0; c < params.in_size_; c++) {
             // propagate delta to previous layer
@@ -73,7 +119,6 @@ inline void fully_connected_op_opencl(const tensor_t &prev_out,
             }
         });
     } 
-    */
 }
 
 }  // namespace kernels
