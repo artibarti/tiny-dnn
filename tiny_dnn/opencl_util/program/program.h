@@ -5,6 +5,8 @@
 #include "third_party/CLCudaAPI/clpp11.h"
 #include "kernel_function.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <stdexcept>
 
 namespace tiny_dnn {

@@ -29,6 +29,19 @@ namespace tiny_dnn {
                 kernel.SetArgument(index, *data);
             }
 
+            template<typename T>
+            void setArgument(int index, const std::vector<T>* data) {
+                CLCudaAPI::Buffer<T> param = CLCudaAPI::Buffer<T>
+                    (context, queue, data->begin(), data->end());
+                
+                kernel.SetArgument(index, param);
+            }
+
+            template<typename T>
+            void setArgument(int index,  T t) {
+                kernel.SetArgument(index, t);
+            }
+
             void launch(std::vector<size_t> global = {512, 1, 1}, 
                 std::vector<size_t> local = {256, 1, 1}) {
 
