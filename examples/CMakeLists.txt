@@ -19,8 +19,11 @@ target_link_libraries(benchmarks_all
 cotire(benchmarks_all)
 
 if(USE_OPENCL)
-    add_executable(example_sinus_fit_opencl opencl/sinus_fit.cpp ${tiny_dnn_headers})
+    add_executable(example_sinus_fit_opencl opencl/sinus_fit_opencl.cpp ${tiny_dnn_headers})
     target_link_libraries(example_sinus_fit_opencl
+        ${project_library_target_name} ${REQUIRED_LIBRARIES})
+    add_executable(example_sinus_fit_compare opencl/sinus_fit_compare.cpp ${tiny_dnn_headers})
+    target_link_libraries(example_sinus_fit_compare
         ${project_library_target_name} ${REQUIRED_LIBRARIES})
 endif()
 

@@ -19,11 +19,11 @@ int main() {
   // create a simple network with 2 layer of 10 neurons each
   // input is x, output is sin(x)
   tiny_dnn::network<tiny_dnn::sequential> net;
-  net << tiny_dnn::fully_connected_layer(1, 10);
+  net << tiny_dnn::fully_connected_layer(1, 10, false);
   net << tiny_dnn::tanh_layer();
-  net << tiny_dnn::fully_connected_layer(10, 10);
+  net << tiny_dnn::fully_connected_layer(10, 10, false);
   net << tiny_dnn::tanh_layer();
-  net << tiny_dnn::fully_connected_layer(10, 1);
+  net << tiny_dnn::fully_connected_layer(10, 1, false);
 
   // create input and desired output on a period
   std::vector<tiny_dnn::vec_t> X;

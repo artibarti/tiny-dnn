@@ -16,7 +16,6 @@
 #include "tiny_dnn/tiny_dnn.h"
 
 int main() {
-
   // create a simple network with 2 layer of 10 neurons each
   // input is x, output is sin(x)
   tiny_dnn::network<tiny_dnn::sequential> net;
