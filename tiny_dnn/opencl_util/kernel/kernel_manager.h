@@ -20,8 +20,6 @@ namespace tiny_dnn {
 
             KernelGroup getKernelGroup(std::string source_file);
 
-            static const int BLOCK_SIZE = 32;
-        
         private:
             
             size_t platform_id;
@@ -51,7 +49,7 @@ namespace tiny_dnn {
         if (cachedKernelGroups.find(source_file) != cachedKernelGroups.end()) {
             return cachedKernelGroups[source_file];                        
         } else {
-            KernelGroup kernelGroup = KernelGroup(source_file, &device, &context, &queue);
+            KernelGroup kernelGroup = KernelGroup(source_file, device, context, queue);
             cachedKernelGroups[source_file] = kernelGroup;
             return kernelGroup;
         }

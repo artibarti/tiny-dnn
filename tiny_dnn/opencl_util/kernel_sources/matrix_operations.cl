@@ -1,14 +1,15 @@
 
-__kernel void matrixMul(const int BLOCK_SIZE, __global float* left, __global float* right,
-    __global float* result, const int left_h, const int left_w, const int right_h, const int right_w)
-{
+__kernel void matrixMul(const int BLOCK_SIZE_X, const int BLOCK_SIZE_Y, const int BLOCK_SIZE_Z,
+    __global float* left, __global float* right, __global float* result, const int left_h, 
+    const int left_w, const int right_h, const int right_w) {
+    
     int global_x = get_group_id(0);
     int global_y = get_group_id(1);
     int local_x = get_local_id(0);
     int local_y = get_local_id(1);
 
-    int row_index = global_y * BLOCK_SIZE + local_y;
-    int col_index = global_x * BLOCK_SIZE + local_x;
+    int row_index = global_x * BLOCK_SIZE_X + local_x;
+    int col_index = global_y * BLOCK_SIZE_Y + local_y;
 
     if (row_index < left_h && col_index < right_w) {
 

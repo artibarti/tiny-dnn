@@ -598,6 +598,8 @@ template <typename T>
 class Buffer {
  public:
 
+  explicit Buffer() {}
+
   // Constructor based on the regular OpenCL data-type: memory management is handled elsewhere
   explicit Buffer(const cl_mem buffer):
       buffer_(new cl_mem),
@@ -686,8 +688,8 @@ class Buffer {
                   const size_t offset = 0) {
     WriteAsync(queue, size, host.data(), offset);
   }
-  void WriteAsync(const Queue &queue, const size_t size, const BufferHost<T> &host,
-                  const size_t offset = 0) {
+  void WriteAsync(const Queue &queue, const size_t size,
+    const BufferHost<T> &host, const size_t offset = 0) {
     WriteAsync(queue, size, host.data(), offset);
   }
 
@@ -696,19 +698,19 @@ class Buffer {
     WriteAsync(queue, size, host, offset);
     queue.Finish();
   }
-  void Write(const Queue &queue, const size_t size, const std::vector<T> &host,
-             const size_t offset = 0) {
+  void Write(const Queue &queue, const size_t size,
+    const std::vector<T> &host, const size_t offset = 0) {
     Write(queue, size, host.data(), offset);
   }
-  void Write(const Queue &queue, const size_t size, const BufferHost<T> &host,
-             const size_t offset = 0) {
+  void Write(const Queue &queue, const size_t size,
+    const BufferHost<T> &host, const size_t offset = 0) {
     Write(queue, size, host.data(), offset);
   }
 
   // Copies the contents of this buffer into another device buffer
   void CopyToAsync(const Queue &queue, const size_t size, const Buffer<T> &destination) const {
-    CheckError(clEnqueueCopyBuffer(queue(), *buffer_, destination(), 0, 0, size*sizeof(T), 0,
-                                   nullptr, nullptr));
+    CheckError(clEnqueueCopyBuffer(queue(), *buffer_, destination(),
+      0, 0, size*sizeof(T), 0, nullptr, nullptr));
   }
   void CopyTo(const Queue &queue, const size_t size, const Buffer<T> &destination) const {
     CopyToAsync(queue, size, destination);
@@ -724,7 +726,10 @@ class Buffer {
   }
 
   // Accessor to the private data-member
-  const cl_mem& operator()() const { return *buffer_; }
+  const cl_mem& operator()() const {
+    return *buffer_;
+  }
+ 
  private:
   std::shared_ptr<cl_mem> buffer_;
   const BufferAccess access_;

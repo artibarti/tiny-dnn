@@ -27,52 +27,41 @@ inline void fully_connected_op_opencl(const tensor_t &in_data, const vec_t &W,
         
         Kernel kernel = kernelGroup.getKernel("matrixMul");
 
-        // TODO avoid double copy
-        vec_t in, out;
+        int inDataElementCount = in_data.size() * params.in_size_;
+        int outDataElementCount = out_data.size() * params.out_size_;
+
+        Buffer<float> d_in = Buffer<float>(kernel.getContext(),
+            kernel.getQueue(), inDataElementCount);
+        Buffer<float> d_out = Buffer<float>(kernel.getContext(),
+            kernel.getQueue(), outDataElementCount);
+        Buffer<float> d_W = Buffer<float>(kernel.getContext(),
+            kernel.getQueue(), W.size());
+
         for (unsigned int i = 0; i<in_data.size(); i++)
-            for (unsigned int j = 0; j<in_data[i].size(); j++)
-                in.push_back(in_data[i][j]);
-        for (unsigned int i = 0; i<out_data.size(); i++)
-            for (unsigned int j = 0; j<out_data[i].size(); j++)
-                out.push_back(out_data[i][j]);
-
-        // TODO vectors should be passed directly to setArgument
-        auto d_in = CLCudaAPI::Buffer<float>(*(kernel.getContext()),
-            *(kernel.getQueue()), in.begin(), in.end());
-        auto d_W = CLCudaAPI::Buffer<float>(*(kernel.getContext()),
-            *(kernel.getQueue()), W.begin(), W.end());
-        auto d_out = CLCudaAPI::Buffer<float>(*(kernel.getContext()),
-            *(kernel.getQueue()), out.begin(), out.end());
-
-        int blockSize = KernelManager::BLOCK_SIZE;
+            d_in.write(in_data[i].data(), params.in_size_, i * params.in_size_);        
+        d_W.write(W.data(), W.size());
 
         // thread configuration
-        std::vector<size_t> local = {blockSize, blockSize,1};    
-        std::vector<size_t> global = {blockSize, blockSize, 1};
+        std::vector<size_t> local = {BLOCK_SIZE_X, BLOCK_SIZE_Y, BLOCK_SIZE_Z};    
+        std::vector<size_t> global = {BLOCK_SIZE_X, BLOCK_SIZE_Y, BLOCK_SIZE_Z};
 
-        kernel.setArgument<int>(0, blockSize);
-        kernel.setArgument<float>(1, &d_in);
-        kernel.setArgument<float>(2, &d_W);
-        kernel.setArgument<float>(3, &d_out);
-        kernel.setArgument<int>(4, in_data.size());
-        kernel.setArgument<int>(5, params.in_size_);
-        kernel.setArgument<int>(6, params.in_size_);
-        kernel.setArgument<int>(7, params.out_size_);
+        kernel.setArgument<int>(0, BLOCK_SIZE_X);
+        kernel.setArgument<int>(1, BLOCK_SIZE_Y);
+        kernel.setArgument<int>(2, BLOCK_SIZE_Z);
+        kernel.setArgument<float>(3, d_in);
+        kernel.setArgument<float>(4, d_W);
+        kernel.setArgument<float>(5, d_out);
+        kernel.setArgument<int>(6, in_data.size());
+        kernel.setArgument<int>(7, params.in_size_);
+        kernel.setArgument<int>(8, params.in_size_);
+        kernel.setArgument<int>(9, params.out_size_);
         
         kernel.launch(global, local);
 
-        // read the result back into out_data 
-        std::vector<float> result(out.size());
-        d_out.Read(*(kernel.getQueue()), out.size(), result);
+        // read result from device
+        for (unsigned int i = 0; i<out_data.size(); i++)
+            d_out.read(out_data[i].data(), params.out_size_, i * params.out_size_);
 
-        for (unsigned int i = 0; i < in_data.size(); i++) {
-            vec_t out_row;
-            for (unsigned int j = 0; j < params.out_size_; j++) {
-                out_row.push_back(result[i * params.out_size_ + j]);
-            }
-            out_data[i] = out_row;
-        }    
-    
     #else
         throw tiny_dnn::nn_error("tiny-dnn was not built with OpenCL support");
     #endif

@@ -17,8 +17,8 @@ namespace tiny_dnn {
         public:
             KernelGroup() {}
             
-            KernelGroup(std::string source_file, CLCudaAPI::Device* device, 
-                CLCudaAPI::Context* context, CLCudaAPI::Queue* queue);
+            KernelGroup(std::string source_file, CLCudaAPI::Device& device, 
+                CLCudaAPI::Context& context, CLCudaAPI::Queue& queue);
             
             Kernel getKernel(std::string kernel_name);
 
@@ -31,30 +31,30 @@ namespace tiny_dnn {
             std::string loadFileContent(std::string filename);
     };
 
-    KernelGroup::KernelGroup(std::string source_file, CLCudaAPI::Device* device, 
-        CLCudaAPI::Context* context, CLCudaAPI::Queue* queue) {
+    KernelGroup::KernelGroup(std::string source_file, CLCudaAPI::Device& device, 
+        CLCudaAPI::Context& context, CLCudaAPI::Queue& queue) {
         
-        this->device = device;
-        this->context = context;
-        this->queue = queue;
+        this->device = &device;
+        this->context = &context;
+        this->queue = &queue;
 
-        program = CLCudaAPI::Program(*context, loadFileContent(source_file));        
+        program = CLCudaAPI::Program(context, loadFileContent(source_file));        
 
         std::vector<std::string> compiler_options = std::vector<std::string>{};
 
         try {
-            program.Build(*device, compiler_options);
+            program.Build(device, compiler_options);
         } catch (const CLCudaAPI::CLCudaAPIBuildError &e) {            
             if (program.StatusIsCompilationWarningOrError(e.status())) {
                 std::cout << "Compiler error(s)/warning(s) found: "
-                    << program.GetBuildInfo(*device) << std::endl;
+                    << program.GetBuildInfo(device) << std::endl;
             }
             throw;
         }
     }
 
     Kernel KernelGroup::getKernel(std::string kernel_name) {
-        return Kernel(kernel_name, &program, context, queue);
+        return Kernel(kernel_name, program, context, queue);
     }
 
     std::string KernelGroup::loadFileContent(std::string filename)

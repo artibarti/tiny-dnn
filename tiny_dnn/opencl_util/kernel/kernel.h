@@ -1,6 +1,7 @@
 #pragma once
 
 #include "third_party/CLCudaAPI/clpp11.h"
+#include "kernel_buffer.h"
 
 #include <string>
 #include <vector>
@@ -14,20 +15,25 @@ namespace tiny_dnn {
         public:
             Kernel() {}
 
-            Kernel(std::string kernel_name, CLCudaAPI::Program* program, 
+            Kernel(std::string kernel_name, CLCudaAPI::Program& program, 
                 CLCudaAPI::Context* context, CLCudaAPI::Queue* queue);
 
             void launch(std::vector<size_t> global, std::vector<size_t> local);
 
             // TODO (should accept vector)
             template<typename T>
-            void setArgument(int index,  CLCudaAPI::Buffer<T>* data);
+            void setArgument(int index,  CLCudaAPI::Buffer<T>& data);
 
             template<typename T>
             void setArgument(int index,  T t);
 
-            CLCudaAPI::Context* getContext();
-            CLCudaAPI::Queue* getQueue();
+            template<typename T>
+            void setArgument(int index, Buffer<T> buffer);
+
+            CLCudaAPI::Context& getContext();
+            CLCudaAPI::Queue& getQueue();
+
+            
 
         private:
             CLCudaAPI::Kernel kernel;            
@@ -36,12 +42,12 @@ namespace tiny_dnn {
             CLCudaAPI::Event event;
     };
 
-    Kernel::Kernel(std::string kernel_name, CLCudaAPI::Program* program, 
+    Kernel::Kernel(std::string kernel_name, CLCudaAPI::Program& program, 
         CLCudaAPI::Context* context, CLCudaAPI::Queue* queue) {
 
         this -> context = context;
         this -> queue = queue;        
-        kernel = CLCudaAPI::Kernel(*program, kernel_name);
+        kernel = CLCudaAPI::Kernel(program, kernel_name);
         event = CLCudaAPI::Event();
     }
 
@@ -51,21 +57,21 @@ namespace tiny_dnn {
     }
 
     template<typename T>
-    void Kernel::setArgument(int index,  CLCudaAPI::Buffer<T>* data) {
-        kernel.SetArgument(index, *data);
-    }
-
-    template<typename T>
     void Kernel::setArgument(int index,  T t) {
         kernel.SetArgument(index, t);
     }
 
-    CLCudaAPI::Context* Kernel::getContext() {
-        return context;
+    template<typename T>
+    void Kernel::setArgument(int index, Buffer<T> buffer) {
+        kernel.SetArgument(index, buffer.data());
+    }
+
+    CLCudaAPI::Context& Kernel::getContext() {
+        return *context;
     }
     
-    CLCudaAPI::Queue* Kernel::getQueue() {
-        return queue;
+    CLCudaAPI::Queue& Kernel::getQueue() {
+        return *queue;
     }
 
 } // namespace tiny_dnn
