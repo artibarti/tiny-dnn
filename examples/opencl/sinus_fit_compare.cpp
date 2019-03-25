@@ -93,8 +93,8 @@ int main() {
 	std::cout << "Test net with internal backend..." << std::endl;
 	test(net_internal);
 
-	// some weird thing is going on here, the previous has an effect on the second one,
-	// the instead of have the same output, the second one gives a more precise result
+	// some weird thing is going on here, the previous network has an effect on the second one,
+	// instead of having the same output, the second one gives a more precise result
 
 	tiny_dnn::network<tiny_dnn::sequential> net_opencl;
 	initNetwork(net_opencl, tiny_dnn::core::backend_t::opencl);
