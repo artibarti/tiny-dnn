@@ -30,11 +30,11 @@ inline void fully_connected_op_opencl(const tensor_t &in_data, const vec_t &W,
         int inDataElementCount = in_data.size() * params.in_size_;
         int outDataElementCount = out_data.size() * params.out_size_;
 
-        Buffer<float> d_in = Buffer<float>(kernel.getContext(),
+        Buffer<float_t> d_in = Buffer<float_t>(kernel.getContext(),
             kernel.getQueue(), inDataElementCount);
-        Buffer<float> d_out = Buffer<float>(kernel.getContext(),
+        Buffer<float_t> d_out = Buffer<float_t>(kernel.getContext(),
             kernel.getQueue(), outDataElementCount);
-        Buffer<float> d_W = Buffer<float>(kernel.getContext(),
+        Buffer<float_t> d_W = Buffer<float_t>(kernel.getContext(),
             kernel.getQueue(), W.size());
 
         for (unsigned int i = 0; i<in_data.size(); i++)
@@ -48,9 +48,9 @@ inline void fully_connected_op_opencl(const tensor_t &in_data, const vec_t &W,
         kernel.setArgument<int>(0, BLOCK_SIZE_X);
         kernel.setArgument<int>(1, BLOCK_SIZE_Y);
         kernel.setArgument<int>(2, BLOCK_SIZE_Z);
-        kernel.setArgument<float>(3, d_in);
-        kernel.setArgument<float>(4, d_W);
-        kernel.setArgument<float>(5, d_out);
+        kernel.setArgument<float_t>(3, d_in);
+        kernel.setArgument<float_t>(4, d_W);
+        kernel.setArgument<float_t>(5, d_out);
         kernel.setArgument<int>(6, in_data.size());
         kernel.setArgument<int>(7, params.in_size_);
         kernel.setArgument<int>(8, params.in_size_);
