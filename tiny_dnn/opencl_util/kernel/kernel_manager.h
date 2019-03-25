@@ -1,23 +1,26 @@
 #pragma once
 
 #include "third_party/CLCudaAPI/clpp11.h"
-#include "program.h"
+#include "kernel_group.h"
+
+#include <stdexcept>
 #include <string>
 #include <map>
-#include <stdexcept>
 
 namespace tiny_dnn {
 
-    class ProgramManager {
+    class KernelManager {
 
         public:
             
-            static ProgramManager& getInstance() {
-                static ProgramManager instance;
+            static KernelManager& getInstance() {
+                static KernelManager instance;
                 return instance;
             }
-            
-            CLProgram getProgram(std::string source_file);
+
+            KernelGroup getKernelGroup(std::string source_file);
+
+            static const int BLOCK_SIZE = 32;
         
         private:
             
@@ -29,9 +32,9 @@ namespace tiny_dnn {
             CLCudaAPI::Context context;
             CLCudaAPI::Queue queue;
 
-            std::map<std::string, CLProgram> compiledPrograms;
+            std::map<std::string, KernelGroup> cachedKernelGroups;
             
-            ProgramManager() {
+            KernelManager() {
                 
                 platform_id = size_t{0};
                 device_id = size_t{0};
@@ -43,14 +46,14 @@ namespace tiny_dnn {
             }
     };
 
-    CLProgram ProgramManager::getProgram(std::string source_file) {
+    KernelGroup KernelManager::getKernelGroup(std::string source_file) {
         
-        if (compiledPrograms.find(source_file) != compiledPrograms.end()) {
-            return compiledPrograms[source_file];                        
+        if (cachedKernelGroups.find(source_file) != cachedKernelGroups.end()) {
+            return cachedKernelGroups[source_file];                        
         } else {
-            CLProgram program = CLProgram(&context, &device, &queue, source_file);
-            compiledPrograms[source_file] = program;
-            return program;
+            KernelGroup kernelGroup = KernelGroup(source_file, &device, &context, &queue);
+            cachedKernelGroups[source_file] = kernelGroup;
+            return kernelGroup;
         }
     }
 

@@ -2,6 +2,6 @@
 
 #include "third_party/CLCudaAPI/clpp11.h"
 
-#include "program/program_manager.h"
-#include "program/program.h"
-#include "program/kernel_function.h"
+#include "kernel/kernel_manager.h"
+#include "kernel/kernel_group.h"
+#include "kernel/kernel.h"

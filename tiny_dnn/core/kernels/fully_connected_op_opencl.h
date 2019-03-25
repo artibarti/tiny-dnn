@@ -18,34 +18,25 @@ namespace tiny_dnn {
 namespace kernels {
 
 inline void fully_connected_op_opencl(const tensor_t &in_data, const vec_t &W, 
-    const vec_t &bias, tensor_t &out_data, const core::fully_params &params,
-    const bool layer_parallelize) {
+    const vec_t &bias, tensor_t &out_data, const core::fully_params &params) {
 
     #ifdef USE_OPENCL
 
-        // OpenCL support is in beta, this code is definitely not the final one
+        KernelGroup kernelGroup = KernelManager::getInstance()
+            .getKernelGroup("matrix_operations.cl");
+        
+        Kernel kernel = kernelGroup.getKernel("matrixMul");
 
-        // read file source and get kernel for matrix multiplication
-        CLProgram program = ProgramManager::getInstance().getProgram("matrix_operations.cl");
-        CLKernel kernel = program.getKernel("matrixMul");
-
-        // this part must be improved... here because tensor_t is a vector os vector type,
-        // first the raw data must be created (another solution is required)
-        vec_t in;
-        for (unsigned int i = 0; i<in_data.size(); i++) {
-            for (unsigned int j = 0; j<in_data[i].size(); j++) {
+        // TODO avoid double copy
+        vec_t in, out;
+        for (unsigned int i = 0; i<in_data.size(); i++)
+            for (unsigned int j = 0; j<in_data[i].size(); j++)
                 in.push_back(in_data[i][j]);
-            }
-        }
-
-        vec_t out;
-        for (unsigned int i = 0; i<out_data.size(); i++) {
-            for (unsigned int j = 0; j<out_data[i].size(); j++) {
+        for (unsigned int i = 0; i<out_data.size(); i++)
+            for (unsigned int j = 0; j<out_data[i].size(); j++)
                 out.push_back(out_data[i][j]);
-            }
-        }
 
-        // create device data
+        // TODO vectors should be passed directly to setArgument
         auto d_in = CLCudaAPI::Buffer<float>(*(kernel.getContext()),
             *(kernel.getQueue()), in.begin(), in.end());
         auto d_W = CLCudaAPI::Buffer<float>(*(kernel.getContext()),
@@ -53,16 +44,13 @@ inline void fully_connected_op_opencl(const tensor_t &in_data, const vec_t &W,
         auto d_out = CLCudaAPI::Buffer<float>(*(kernel.getContext()),
             *(kernel.getQueue()), out.begin(), out.end());
 
-        // should be global for the whole project in the future,
-        // must be set according to the gpu capabilities
-        int BLOCK_SIZE = 32;
+        int blockSize = KernelManager::BLOCK_SIZE;
 
         // thread configuration
-        std::vector<size_t> local = {32,32,1};    
-        std::vector<size_t> global = {32, 32, 1};
+        std::vector<size_t> local = {blockSize, blockSize,1};    
+        std::vector<size_t> global = {blockSize, blockSize, 1};
 
-        // add arguments to kernel
-        kernel.setArgument<int>(0, BLOCK_SIZE);
+        kernel.setArgument<int>(0, blockSize);
         kernel.setArgument<float>(1, &d_in);
         kernel.setArgument<float>(2, &d_W);
         kernel.setArgument<float>(3, &d_out);
@@ -70,8 +58,7 @@ inline void fully_connected_op_opencl(const tensor_t &in_data, const vec_t &W,
         kernel.setArgument<int>(5, params.in_size_);
         kernel.setArgument<int>(6, params.in_size_);
         kernel.setArgument<int>(7, params.out_size_);
-
-        // launch the kernel
+        
         kernel.launch(global, local);
 
         // read the result back into out_data 
@@ -87,7 +74,7 @@ inline void fully_connected_op_opencl(const tensor_t &in_data, const vec_t &W,
         }    
     
     #else
-        throw tiny_dnn::nn_error("tiny-dnn was not built with Serialization support");
+        throw tiny_dnn::nn_error("tiny-dnn was not built with OpenCL support");
     #endif
 }
 
