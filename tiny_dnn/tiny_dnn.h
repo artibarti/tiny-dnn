@@ -11,6 +11,8 @@
 #include "tiny_dnn/network.h"
 #include "tiny_dnn/nodes.h"
 
+#include "tiny_dnn/containers/containers.h"
+
 #include "tiny_dnn/activations/asinh_layer.h"
 #include "tiny_dnn/activations/elu_layer.h"
 #include "tiny_dnn/activations/leaky_relu_layer.h"
