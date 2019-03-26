@@ -10,35 +10,37 @@ namespace tiny_dnn {
 
         private:
             std::shared_ptr<T> m_data;
-            int elementCount;
+            unsigned elementCount;
             Shape2d shape;
 
-            void setShape(int rows, int cols);
+            void setShape(unsigned rows, unsigned cols);
 
         public:
             Matrix<T>() {}
-            Matrix(int rows, int cols);
+            Matrix(unsigned rows, unsigned cols);
             Matrix(Matrix<T>& m);
             Matrix<T>& operator= (Matrix<T>& m);
 
             // size access
-            int getElementCount();
-            int rowCount();
-            int colCount();
+            unsigned getElementCount() const;
+            unsigned rowCount() const;
+            unsigned colCount() const;
+
+            void resize(unsigned rows, unsigned cols);
 
             // data access
             T* data();
             T* row(unsigned index);
-            T& operator[] (const unsigned index);
-            const T& operator[] (const unsigned index) const;
+            T& operator[] (unsigned index);
+            const T& operator[] (unsigned index) const;
 
             // for compability checking
-            bool isMultipliableWith(Matrix<T>& m);
-            bool hasSameDimensionWith(Matrix<T>& m);
+            bool isMultipliableWith(const Matrix<T>& m) const;
+            bool hasSameDimensionWith(const Matrix<T>& m) const;
     };
 
     template<typename T>
-    Matrix<T>::Matrix(int rows, int cols) {
+    Matrix<T>::Matrix(unsigned rows, unsigned cols) {
         setShape(rows, cols);
     }
 
@@ -61,18 +63,25 @@ namespace tiny_dnn {
     }
 
     template<typename T>
-    int Matrix<T>::getElementCount() {
+    unsigned Matrix<T>::getElementCount() const {
         return elementCount;
     }
 
     template<typename T>
-    int Matrix<T>::rowCount() {
+    unsigned Matrix<T>::rowCount() const {
         return shape.x;
     }
 
     template<typename T>
-    int Matrix<T>::colCount() {
+    unsigned Matrix<T>::colCount()  const {
         return shape.y;
+    }
+
+    template<typename T>
+    void Matrix<T>::resize(unsigned rows, unsigned cols) {
+        if (shape.x != rows || shape.y != cols) {
+            setShape(rows, cols);
+        }
     }
 
     template<typename T>
@@ -82,42 +91,42 @@ namespace tiny_dnn {
 
     template<typename T>
     T* Matrix<T>::row(unsigned index) {
-        return data.get()[(index) * shape.y];
+        return m_data.get()[(index) * shape.y];
     }
 
     template<typename T>
-    T& Matrix<T>::operator[] (const unsigned index) {
+    T& Matrix<T>::operator[] (unsigned index) {
 
         if (index < elementCount) {
-            return data.get()[index];
+            return m_data.get()[index];
         } else {
             throw std::out_of_range("Index out of bounds");
         }
     }
 
     template<typename T>
-    const T& Matrix<T>::operator[] (const unsigned index) const {
+    const T& Matrix<T>::operator[] (unsigned index) const {
 
         if (index < elementCount) {
-            return data.get()[index];
+            return m_data.get()[index];
         } else {
             throw std::out_of_range("Index out of bounds");
         }
     }
 
     template<typename T>
-    bool Matrix<T>::isMultipliableWith(Matrix<T>& m) {
+    bool Matrix<T>::isMultipliableWith(const Matrix<T>& m) const {
         return shape.y == m.rowCount();
     }
     
     template<typename T>
-    bool Matrix<T>::hasSameDimensionWith(Matrix<T>& m) {
+    bool Matrix<T>::hasSameDimensionWith(const Matrix<T>& m) const {
         return shape.x == m.rowCount() 
             && shape.y == m.colCount();
     }
 
     template<typename T>
-    void Matrix<T>::setShape(int rows, int cols) {
+    void Matrix<T>::setShape(unsigned rows, unsigned cols) {
         
         elementCount = rows * cols;
         shape = Shape2d(rows, cols);

@@ -12,6 +12,8 @@
 #include "tiny_dnn/nodes.h"
 
 #include "tiny_dnn/containers/containers.h"
+using matrix_t = tiny_dnn::Matrix<float_t>;
+#include "tiny_dnn/math/math.h"
 
 #include "tiny_dnn/activations/asinh_layer.h"
 #include "tiny_dnn/activations/elu_layer.h"
