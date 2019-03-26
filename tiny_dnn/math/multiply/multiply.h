@@ -23,8 +23,8 @@ namespace tiny_dnn {
 				throw std::invalid_argument("Matrices are not compatible for this operation");
 			}
 
-            bool resultSizeIsCorrect = result.rowCount() != left.rowCount()
-                && result.colCount() != right.colCount();
+      bool resultSizeIsCorrect = result.rowCount() != left.rowCount()
+          && result.colCount() != right.colCount();
 
 			if (resultSizeIsCorrect && !resizeResultIfNeeded) {
 				throw std::invalid_argument("Matrices are not compatible for this operation");
