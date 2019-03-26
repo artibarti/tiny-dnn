@@ -15,7 +15,7 @@
 #include "tiny_dnn/core/params/global_avepool_params.h"
 #include "tiny_dnn/core/params/maxpool_params.h"
 #include "tiny_dnn/layers/layer.h"
-#include "tiny_dnn/node.h"
+#include "tiny_dnn/network/node.h"
 
 #ifdef CNN_USE_NNPACK
 #include <nnpack.h>

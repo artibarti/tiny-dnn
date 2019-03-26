@@ -21,10 +21,7 @@
 #include <utility>
 #include <vector>
 
-#include "tiny_dnn/xtensor/xarray.hpp"
-#include "tiny_dnn/xtensor/xview.hpp"
-
-#include "tiny_dnn/config.h"
+#include "tiny_dnn/config/config.h"
 
 #ifndef CNN_NO_SERIALIZATION
 #include <cereal/archives/binary.hpp>
@@ -46,9 +43,8 @@
 
 namespace tiny_dnn {
 
-///< output label(class-index) for classification
-///< must be equal to size_t, because size of last layer is equal to num.
-/// of classes
+// output label(class-index) for classification must be equal to size_t,
+// because size of last layer is equal to number of classes
 typedef size_t label_t;
 
 typedef size_t layer_size_t;  // for backward compatibility
@@ -57,20 +53,17 @@ typedef std::vector<float_t, aligned_allocator<float_t, 64>> vec_t;
 
 typedef std::vector<vec_t> tensor_t;
 
-template <typename T>
-using xtensor_t = xt::xexpression<T>;
-
 enum class net_phase { train, test };
 
 enum class padding {
-  valid,  ///< use valid pixels of input
-  same    ///< add zero-padding around input so as to keep image size
+  valid,  // use valid pixels of input
+  same    // add zero-padding around input so as to keep image size
 };
 
 template <typename T>
 T *reverse_endian(T *p) {
   std::reverse(reinterpret_cast<char *>(p),
-               reinterpret_cast<char *>(p) + sizeof(T));
+    reinterpret_cast<char *>(p) + sizeof(T));
   return p;
 }
 
@@ -87,21 +80,21 @@ size_t max_index(const T &vec) {
 
 template <typename T, typename U>
 U rescale(T x, T src_min, T src_max, U dst_min, U dst_max) {
-  U value = static_cast<U>(
-    ((x - src_min) * (dst_max - dst_min)) / (src_max - src_min) + dst_min);
+  U value = static_cast<U>(((x - src_min) *
+    (dst_max - dst_min)) / (src_max - src_min) + dst_min);
   return std::min(dst_max, std::max(value, dst_min));
 }
 
-inline void nop() {
-  // do nothing
-}
+inline void nop() {}
 
 template <typename T>
 inline T sqr(T value) {
   return value * value;
 }
 
-inline bool isfinite(float_t x) { return x == x; }
+inline bool isfinite(float_t x) {
+  return x == x;
+}
 
 template <typename Container>
 inline bool has_infinite(const Container &c) {
@@ -112,36 +105,42 @@ inline bool has_infinite(const Container &c) {
 
 template <typename Container>
 size_t max_size(const Container &c) {
+  
   typedef typename Container::value_type value_t;
   const auto max_size =
-    std::max_element(c.begin(), c.end(), [](const value_t &left,
-                                            const value_t &right) {
-      return left.size() < right.size();
-    })->size();
+    std::max_element(c.begin(), c.end(),
+      [](const value_t &left, const value_t &right) {
+        return left.size() < right.size();
+      })->size();
+  
   assert(max_size <= std::numeric_limits<size_t>::max());
   return max_size;
 }
 
 inline std::string format_str(const char *fmt, ...) {
+  
   static char buf[2048];
 
-#ifdef _MSC_VER
-#pragma warning(disable : 4996)
-#endif
+  #ifdef _MSC_VER
+    #pragma warning(disable : 4996)
+  #endif
+  
   va_list args;
   va_start(args, fmt);
   vsnprintf(buf, sizeof(buf), fmt, args);
   va_end(args);
-#ifdef _MSC_VER
-#pragma warning(default : 4996)
-#endif
+
+  #ifdef _MSC_VER
+    #pragma warning(default : 4996)
+  #endif
+  
   return std::string(buf);
 }
 
 template <typename T>
 struct index3d {
+  
   index3d(T width, T height, T depth) { reshape(width, height, depth); }
-
   index3d() : width_(0), height_(0), depth_(0) {}
 
   void reshape(T width, T height, T depth) {
@@ -216,24 +215,6 @@ std::string to_string(T value) {
   os << value;
   return os.str();
 }
-
-#define CNN_LOG_VECTOR(vec, name)
-/*
-void CNN_LOG_VECTOR(const vec_t& vec, const std::string& name) {
-    std::cout << name << ",";
-
-    if (vec.empty()) {
-        std::cout << "(empty)" << std::endl;
-    }
-    else {
-        for (size_t i = 0; i < vec.size(); i++) {
-            std::cout << vec[i] << ",";
-        }
-    }
-
-    std::cout << std::endl;
-}
-*/
 
 template <typename T, typename Pred, typename Sum>
 size_t sumif(const std::vector<T> &vec, Pred p, Sum s) {
@@ -318,11 +299,9 @@ inline void fill_tensor(tensor_t &tensor, float_t value, size_t size) {
   }
 }
 
-inline size_t conv_out_length(size_t in_length,
-                              size_t window_size,
-                              size_t stride,
-                              size_t dilation,
-                              padding pad_type) {
+inline size_t conv_out_length(size_t in_length, size_t window_size,
+  size_t stride, size_t dilation, padding pad_type) {
+  
   size_t output_length;
 
   if (pad_type == padding::same) {
@@ -332,14 +311,13 @@ inline size_t conv_out_length(size_t in_length,
   } else {
     throw nn_error("Not recognized pad_type.");
   }
+  
   return (output_length + stride - 1) / stride;
 }
 
-inline size_t pool_out_length(size_t in_length,
-                              size_t window_size,
-                              size_t stride,
-                              bool ceil_mode,
-                              padding pad_type) {
+inline size_t pool_out_length(size_t in_length, size_t window_size,
+  size_t stride, bool ceil_mode, padding pad_type) {
+  
   size_t output_length;
 
   if (pad_type == padding::same) {
@@ -359,52 +337,4 @@ std::unique_ptr<T> make_unique(Args &&... args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
-// TODO(Randl): Remove after full integration of xtensor
-inline xt::xarray<float_t> to_xtensor(const tensor_t &t) {
-  if (t.size() == 0) return xt::xarray<float_t>({0, 0});
-  xt::xarray<float_t> result = xt::zeros<float_t>({t.size(), t[0].size()});
-  for (size_t i = 0; i < t.size(); ++i)
-    for (size_t j = 0; j < t[0].size(); ++j) result(i, j) = t[i][j];
-  return result;
 }
-
-// TODO(Randl): Remove after full integration
-inline tensor_t from_xtensor(const xt::xarray<float_t> &t) {
-  tensor_t result;
-  for (size_t i = 0; i < t.shape()[0]; ++i) {
-    result.push_back(vec_t());
-    for (size_t j = 0; j < t.shape()[1]; ++j) result.back().push_back(t(i, j));
-  }
-  return result;
-}
-
-// check for value type being some particular type
-template <class ValType, class T>
-using value_type_is =
-  std::enable_if_t<std::is_same<T, typename ValType::value_type>::value>;
-
-template <class ValType>
-using value_is_float = value_type_is<ValType, float>;
-
-template <class ValType>
-using value_is_double = value_type_is<ValType, double>;
-
-// check that whole tuple are xexpressions
-template <typename>
-struct is_xexpression : std::false_type {};
-
-template <typename T>
-struct is_xexpression<xt::xexpression<T>> : std::true_type {};
-
-template <template <typename> class checker, typename... Ts>
-struct are_all : std::true_type {};
-
-template <template <typename> class checker, typename T0, typename... Ts>
-struct are_all<checker, T0, Ts...>
-  : std::integral_constant<bool,
-                           checker<T0>::value &&
-                             are_all<checker, Ts...>::value> {};
-
-template <typename... Ts>
-using are_all_xexpr = are_all<is_xexpression, Ts...>;
-}  // namespace tiny_dnn

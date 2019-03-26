@@ -12,8 +12,8 @@
 #include <vector>
 
 #include "tiny_dnn/layers/layer.h"
-#include "tiny_dnn/network.h"
-#include "tiny_dnn/node.h"
+#include "tiny_dnn/network/network.h"
+#include "tiny_dnn/network/node.h"
 
 namespace tiny_dnn {
 

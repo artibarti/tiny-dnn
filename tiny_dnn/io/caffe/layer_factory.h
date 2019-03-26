@@ -18,7 +18,7 @@
 
 #include "tiny_dnn/io/caffe/layer_factory_impl.h"
 #include "tiny_dnn/lossfunctions/loss_function.h"
-#include "tiny_dnn/network.h"
+#include "tiny_dnn/network/network.h"
 #include "tiny_dnn/optimizers/optimizer.h"
 #include "tiny_dnn/util/util.h"
 

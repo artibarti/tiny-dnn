@@ -9,7 +9,7 @@
 
 #include <string>
 
-#include "tiny_dnn/config.h"
+#include "tiny_dnn/config/config.h"
 
 #ifdef CNN_WINDOWS
 #ifndef NOMINMAX

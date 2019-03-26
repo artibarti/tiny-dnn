@@ -102,9 +102,9 @@
     <ClInclude Include="..\..\tiny_dnn\layers\partial_connected_layer.h" />
     <ClInclude Include="..\..\tiny_dnn\tiny_dnn.h" />
     <ClInclude Include="..\..\tiny_dnn\config.h" />
-    <ClInclude Include="..\..\tiny_dnn\network.h" />
-    <ClInclude Include="..\..\tiny_dnn\node.h" />
-    <ClInclude Include="..\..\tiny_dnn\nodes.h" />
+    <ClInclude Include="..\..\tiny_dnn\network\network.h" />
+    <ClInclude Include="..\..\tiny_dnn\network\node.h" />
+    <ClInclude Include="..\..\tiny_dnn\network\nodes.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals" />
   <PropertyGroup Label="Globals">
