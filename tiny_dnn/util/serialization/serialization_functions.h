@@ -125,6 +125,7 @@ inline void arc(Archive &ar, Type &&arg, Types &&... args) {
 
 namespace cereal {
 
+/*
 template <>
 struct LoadAndConstruct<tiny_dnn::elementwise_add_layer> {
   template <class Archive>
@@ -615,6 +616,7 @@ struct LoadAndConstruct<tiny_dnn::asinh_layer> {
     construct(in_shape);
   }
 };
+*/
 
 template <>
 struct LoadAndConstruct<tiny_dnn::tanh_layer> {
@@ -628,6 +630,7 @@ struct LoadAndConstruct<tiny_dnn::tanh_layer> {
   }
 };
 
+/*
 template <>
 struct LoadAndConstruct<tiny_dnn::relu_layer> {
   template <class Archive>
@@ -736,7 +739,7 @@ struct LoadAndConstruct<tiny_dnn::softsign_layer> {
     construct(in_shape);
   }
 };
-
+*/
 }  // namespace cereal
 
 namespace tiny_dnn {
@@ -753,44 +756,41 @@ struct serialization_buddy {
     layer.initialized_ = true;
   }
 
+  /*
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::elementwise_add_layer &layer) {
-    ::detail::arc(ar, ::detail::make_nvp("num_args", layer.num_args_),
-                  ::detail::make_nvp("dim", layer.dim_));
+  static inline void serialize(Archive &ar, tiny_dnn::elementwise_add_layer &layer) {
+    ::detail::arc(ar, ::detail::make_nvp("num_args", layer.num_args_), 
+      ::detail::make_nvp("dim", layer.dim_));
   }
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::average_pooling_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::average_pooling_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_),
-                  ::detail::make_nvp("pool_size_x", layer.pool_size_x_),
-                  ::detail::make_nvp("pool_size_y", layer.pool_size_y_),
-                  ::detail::make_nvp("stride_x", layer.stride_x_),
-                  ::detail::make_nvp("stride_y", layer.stride_y_),
-                  ::detail::make_nvp("ceil_mode", layer.ceil_mode_),
-                  ::detail::make_nvp("pad_type", layer.pad_type_));
+      ::detail::make_nvp("pool_size_x", layer.pool_size_x_),
+      ::detail::make_nvp("pool_size_y", layer.pool_size_y_),
+      ::detail::make_nvp("stride_x", layer.stride_x_),
+      ::detail::make_nvp("stride_y", layer.stride_y_),
+      ::detail::make_nvp("ceil_mode", layer.ceil_mode_),
+      ::detail::make_nvp("pad_type", layer.pad_type_));
   }
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::average_unpooling_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::average_unpooling_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_),
-                  ::detail::make_nvp("pool_size", layer.w_.width_),
-                  ::detail::make_nvp("stride", layer.stride_));
+      ::detail::make_nvp("pool_size", layer.w_.width_),
+      ::detail::make_nvp("stride", layer.stride_));
   }
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::batch_normalization_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::batch_normalization_layer &layer) {
     ::detail::arc(ar,
-                  ::detail::make_nvp("in_spatial_size", layer.in_spatial_size_),
-                  ::detail::make_nvp("in_channels", layer.in_channels_),
-                  ::detail::make_nvp("epsilon", layer.eps_),
-                  ::detail::make_nvp("momentum", layer.momentum_),
-                  ::detail::make_nvp("phase", layer.phase_),
-                  ::detail::make_nvp("mean", layer.mean_),
-                  ::detail::make_nvp("variance", layer.variance_));
+      ::detail::make_nvp("in_spatial_size", layer.in_spatial_size_),
+      ::detail::make_nvp("in_channels", layer.in_channels_),
+      ::detail::make_nvp("epsilon", layer.eps_),
+      ::detail::make_nvp("momentum", layer.momentum_),
+      ::detail::make_nvp("phase", layer.phase_),
+      ::detail::make_nvp("mean", layer.mean_),
+      ::detail::make_nvp("variance", layer.variance_));
   }
 
   template <class Archive>
@@ -799,56 +799,54 @@ struct serialization_buddy {
   }
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::convolutional_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::convolutional_layer &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in),
-                  ::detail::make_nvp("window_width", params_.weight.width_),
-                  ::detail::make_nvp("window_height", params_.weight.height_),
-                  ::detail::make_nvp("out_channels", params_.out.depth_),
-                  ::detail::make_nvp("connection_table", params_.tbl),
-                  ::detail::make_nvp("pad_type", params_.pad_type),
-                  ::detail::make_nvp("has_bias", params_.has_bias),
-                  ::detail::make_nvp("w_stride", params_.w_stride),
-                  ::detail::make_nvp("h_stride", params_.w_stride),
-                  ::detail::make_nvp("w_dilation", params_.w_dilation),
-                  ::detail::make_nvp("h_dilation", params_.h_dilation));
+      ::detail::make_nvp("window_width", params_.weight.width_),
+      ::detail::make_nvp("window_height", params_.weight.height_),
+      ::detail::make_nvp("out_channels", params_.out.depth_),
+      ::detail::make_nvp("connection_table", params_.tbl),
+      ::detail::make_nvp("pad_type", params_.pad_type),
+      ::detail::make_nvp("has_bias", params_.has_bias),
+      ::detail::make_nvp("w_stride", params_.w_stride),
+      ::detail::make_nvp("h_stride", params_.w_stride),
+      ::detail::make_nvp("w_dilation", params_.w_dilation),
+      ::detail::make_nvp("h_dilation", params_.h_dilation));
   }
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::deconvolutional_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::deconvolutional_layer &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in),
-                  ::detail::make_nvp("window_width", params_.weight.width_),
-                  ::detail::make_nvp("window_height", params_.weight.height_),
-                  ::detail::make_nvp("out_channels", params_.out.depth_),
-                  ::detail::make_nvp("connection_table", params_.tbl),
-                  ::detail::make_nvp("pad_type", params_.pad_type),
-                  ::detail::make_nvp("has_bias", params_.has_bias),
-                  ::detail::make_nvp("w_stride", params_.w_stride),
-                  ::detail::make_nvp("h_stride", params_.h_stride));
+      ::detail::make_nvp("window_width", params_.weight.width_),
+      ::detail::make_nvp("window_height", params_.weight.height_),
+      ::detail::make_nvp("out_channels", params_.out.depth_),
+      ::detail::make_nvp("connection_table", params_.tbl),
+      ::detail::make_nvp("pad_type", params_.pad_type),
+      ::detail::make_nvp("has_bias", params_.has_bias),
+      ::detail::make_nvp("w_stride", params_.w_stride),
+      ::detail::make_nvp("h_stride", params_.h_stride));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::dropout_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_size_),
-                  ::detail::make_nvp("dropout_rate", layer.dropout_rate_),
-                  ::detail::make_nvp("phase", layer.phase_));
+      ::detail::make_nvp("dropout_rate", layer.dropout_rate_),
+      ::detail::make_nvp("phase", layer.phase_));
   }
+  */
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::fully_connected_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::fully_connected_layer &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in_size_),
-                  ::detail::make_nvp("out_size", params_.out_size_),
-                  ::detail::make_nvp("has_bias", params_.has_bias_));
+      ::detail::make_nvp("out_size", params_.out_size_),
+      ::detail::make_nvp("has_bias", params_.has_bias_));
   }
 
+  /*
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::global_average_pooling_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::global_average_pooling_layer &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_shape", params_.in));
   }
@@ -859,99 +857,93 @@ struct serialization_buddy {
   }
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::l2_normalization_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::l2_normalization_layer &layer) {
     ::detail::arc(ar,
-                  ::detail::make_nvp("in_spatial_size", layer.in_spatial_size_),
-                  ::detail::make_nvp("in_channels", layer.in_channels_),
-                  ::detail::make_nvp("epsilon", layer.eps_),
-                  ::detail::make_nvp("scale", layer.scale_));
+      ::detail::make_nvp("in_spatial_size", layer.in_spatial_size_),
+      ::detail::make_nvp("in_channels", layer.in_channels_),
+      ::detail::make_nvp("epsilon", layer.eps_),
+      ::detail::make_nvp("scale", layer.scale_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::linear_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.dim_),
-                  ::detail::make_nvp("scale", layer.scale_),
-                  ::detail::make_nvp("bias", layer.bias_));
+      ::detail::make_nvp("scale", layer.scale_),
+      ::detail::make_nvp("bias", layer.bias_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::lrn_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_shape", layer.in_shape_),
-                  ::detail::make_nvp("size", layer.size_),
-                  ::detail::make_nvp("alpha", layer.alpha_),
-                  ::detail::make_nvp("beta", layer.beta_),
-                  ::detail::make_nvp("region", layer.region_));
+      ::detail::make_nvp("size", layer.size_),
+      ::detail::make_nvp("alpha", layer.alpha_),
+      ::detail::make_nvp("beta", layer.beta_),
+      ::detail::make_nvp("region", layer.region_));
   }
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::max_pooling_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::max_pooling_layer &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in),
-                  ::detail::make_nvp("pool_size_x", params_.pool_size_x),
-                  ::detail::make_nvp("pool_size_y", params_.pool_size_y),
-                  ::detail::make_nvp("stride_x", params_.stride_x),
-                  ::detail::make_nvp("stride_y", params_.stride_y),
-                  ::detail::make_nvp("ceil_mode", params_.ceil_mode),
-                  ::detail::make_nvp("pad_type", params_.pad_type));
+      ::detail::make_nvp("pool_size_x", params_.pool_size_x),
+      ::detail::make_nvp("pool_size_y", params_.pool_size_y),
+      ::detail::make_nvp("stride_x", params_.stride_x),
+      ::detail::make_nvp("stride_y", params_.stride_y),
+      ::detail::make_nvp("ceil_mode", params_.ceil_mode),
+      ::detail::make_nvp("pad_type", params_.pad_type));
   }
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::max_unpooling_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::max_unpooling_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_),
-                  ::detail::make_nvp("unpool_size", layer.unpool_size_),
-                  ::detail::make_nvp("stride", layer.stride_));
+      ::detail::make_nvp("unpool_size", layer.unpool_size_),
+      ::detail::make_nvp("stride", layer.stride_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::zero_pad_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape_),
-                  ::detail::make_nvp("w_pad_size", layer.w_pad_size_),
-                  ::detail::make_nvp("h_pad_size", layer.h_pad_size_));
+      ::detail::make_nvp("w_pad_size", layer.w_pad_size_),
+      ::detail::make_nvp("h_pad_size", layer.h_pad_size_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::power_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape_),
-                  ::detail::make_nvp("factor", layer.factor_),
-                  ::detail::make_nvp("scale", layer.scale_));
+      ::detail::make_nvp("factor", layer.factor_),
+      ::detail::make_nvp("scale", layer.scale_));
   }
 
   template <class Archive>
-  static inline void serialize(Archive &ar,
-                               tiny_dnn::quantized_convolutional_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::quantized_convolutional_layer &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in),
-                  ::detail::make_nvp("window_width", params_.weight.width_),
-                  ::detail::make_nvp("window_height", params_.weight.height_),
-                  ::detail::make_nvp("out_channels", params_.out.depth_),
-                  ::detail::make_nvp("connection_table", params_.tbl),
-                  ::detail::make_nvp("pad_type", params_.pad_type),
-                  ::detail::make_nvp("has_bias", params_.has_bias),
-                  ::detail::make_nvp("w_stride", params_.w_stride),
-                  ::detail::make_nvp("h_stride", params_.h_stride));
+      ::detail::make_nvp("window_width", params_.weight.width_),
+      ::detail::make_nvp("window_height", params_.weight.height_),
+      ::detail::make_nvp("out_channels", params_.out.depth_),
+      ::detail::make_nvp("connection_table", params_.tbl),
+      ::detail::make_nvp("pad_type", params_.pad_type),
+      ::detail::make_nvp("has_bias", params_.has_bias),
+      ::detail::make_nvp("w_stride", params_.w_stride),
+      ::detail::make_nvp("h_stride", params_.h_stride));
   }
 
   template <class Archive>
-  static inline void serialize(
-    Archive &ar, tiny_dnn::quantized_deconvolutional_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::quantized_deconvolutional_layer &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in),
-                  ::detail::make_nvp("window_width", params_.weight.width_),
-                  ::detail::make_nvp("window_height", params_.weight.height_),
-                  ::detail::make_nvp("out_channels", params_.out.depth_),
-                  ::detail::make_nvp("connection_table", params_.tbl),
-                  ::detail::make_nvp("pad_type", params_.pad_type),
-                  ::detail::make_nvp("has_bias", params_.has_bias),
-                  ::detail::make_nvp("w_stride", params_.w_stride),
-                  ::detail::make_nvp("h_stride", params_.h_stride));
+      ::detail::make_nvp("window_width", params_.weight.width_),
+      ::detail::make_nvp("window_height", params_.weight.height_),
+      ::detail::make_nvp("out_channels", params_.out.depth_),
+      ::detail::make_nvp("connection_table", params_.tbl),
+      ::detail::make_nvp("pad_type", params_.pad_type),
+      ::detail::make_nvp("has_bias", params_.has_bias),
+      ::detail::make_nvp("w_stride", params_.w_stride),
+      ::detail::make_nvp("h_stride", params_.h_stride));
   }
 
   template <class Archive>
-  static inline void serialize(
-    Archive &ar, tiny_dnn::quantized_fully_connected_layer &layer) {
+  static inline void serialize(Archive &ar, tiny_dnn::quantized_fully_connected_layer &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in_size_),
                   ::detail::make_nvp("out_size", params_.out_size_),
@@ -969,31 +961,31 @@ struct serialization_buddy {
   static inline void serialize(Archive &ar, tiny_dnn::gru_cell &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in_size_),
-                  ::detail::make_nvp("out_size", params_.out_size_),
-                  ::detail::make_nvp("has_bias", params_.has_bias_));
+      ::detail::make_nvp("out_size", params_.out_size_),
+      ::detail::make_nvp("has_bias", params_.has_bias_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::lstm_cell &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in_size_),
-                  ::detail::make_nvp("out_size", params_.out_size_),
-                  ::detail::make_nvp("has_bias", params_.has_bias_));
+      ::detail::make_nvp("out_size", params_.out_size_),
+      ::detail::make_nvp("has_bias", params_.has_bias_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::rnn_cell &layer) {
     auto &params_ = layer.params_;
     ::detail::arc(ar, ::detail::make_nvp("in_size", params_.in_size_),
-                  ::detail::make_nvp("out_size", params_.out_size_),
-                  ::detail::make_nvp("has_bias", params_.has_bias_));
+      ::detail::make_nvp("out_size", params_.out_size_),
+      ::detail::make_nvp("has_bias", params_.has_bias_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::slice_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape_),
-                  ::detail::make_nvp("slice_type", layer.slice_type_),
-                  ::detail::make_nvp("num_outputs", layer.num_outputs_));
+      ::detail::make_nvp("slice_type", layer.slice_type_),
+      ::detail::make_nvp("num_outputs", layer.num_outputs_));
   }
 
   template <class Archive>
@@ -1005,12 +997,14 @@ struct serialization_buddy {
   static inline void serialize(Archive &ar, tiny_dnn::asinh_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape()[0]));
   }
+  */
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::tanh_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape()[0]));
   }
 
+  /*
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::relu_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape()[0]));
@@ -1024,20 +1018,20 @@ struct serialization_buddy {
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::leaky_relu_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape()[0]),
-                  ::detail::make_nvp("epsilon", layer.epsilon_));
+      ::detail::make_nvp("epsilon", layer.epsilon_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::elu_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape()[0]),
-                  ::detail::make_nvp("alpha", layer.alpha_));
+      ::detail::make_nvp("alpha", layer.alpha_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::selu_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape()[0]),
-                  ::detail::make_nvp("lambda", layer.lambda_),
-                  ::detail::make_nvp("alpha", layer.alpha_));
+      ::detail::make_nvp("lambda", layer.lambda_),
+      ::detail::make_nvp("alpha", layer.alpha_));
   }
 
   template <class Archive>
@@ -1048,14 +1042,15 @@ struct serialization_buddy {
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::softplus_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape()[0]),
-                  ::detail::make_nvp("beta", layer.beta_),
-                  ::detail::make_nvp("threshold", layer.threshold_));
+      ::detail::make_nvp("beta", layer.beta_),
+      ::detail::make_nvp("threshold", layer.threshold_));
   }
 
   template <class Archive>
   static inline void serialize(Archive &ar, tiny_dnn::softsign_layer &layer) {
     ::detail::arc(ar, ::detail::make_nvp("in_size", layer.in_shape()[0]));
   }
+  */
 
 #endif  // #ifndef CNN_NO_SERIALIZATION
 };      // struct serialization_buddy
@@ -1072,8 +1067,8 @@ serialize(Archive &ar, T &layer) {
 template <class Archive, typename T>
 void serialize(Archive &ar, tiny_dnn::index3d<T> &idx) {
   ::detail::arc(ar, ::detail::make_nvp("width", idx.width_),
-                ::detail::make_nvp("height", idx.height_),
-                ::detail::make_nvp("depth", idx.depth_));
+    ::detail::make_nvp("height", idx.height_),
+    ::detail::make_nvp("depth", idx.depth_));
 }
 
 namespace core {
@@ -1081,7 +1076,7 @@ namespace core {
 template <class Archive>
 void serialize(Archive &ar, tiny_dnn::core::connection_table &tbl) {
   ::detail::arc(ar, ::detail::make_nvp("rows", tbl.rows_),
-                ::detail::make_nvp("cols", tbl.cols_));
+  ::detail::make_nvp("cols", tbl.cols_));
   if (tbl.is_empty()) {
     std::string all("all");
     ::detail::arc(ar, ::detail::make_nvp("connection", all));
