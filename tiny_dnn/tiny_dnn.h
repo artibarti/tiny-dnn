@@ -7,9 +7,9 @@
 */
 #pragma once
 
-#include "tiny_dnn/config.h"
-#include "tiny_dnn/network.h"
-#include "tiny_dnn/nodes.h"
+#include "tiny_dnn/config/config.h"
+#include "tiny_dnn/network/network.h"
+#include "tiny_dnn/network/nodes.h"
 
 #include "tiny_dnn/activations/asinh_layer.h"
 #include "tiny_dnn/activations/elu_layer.h"

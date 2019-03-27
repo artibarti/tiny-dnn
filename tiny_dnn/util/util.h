@@ -24,7 +24,7 @@
 #include "tiny_dnn/xtensor/xarray.hpp"
 #include "tiny_dnn/xtensor/xview.hpp"
 
-#include "tiny_dnn/config.h"
+#include "tiny_dnn/config/config.h"
 
 #ifndef CNN_NO_SERIALIZATION
 #include <cereal/archives/binary.hpp>

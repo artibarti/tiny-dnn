@@ -324,7 +324,7 @@ if (USE_ASAN)
 endif()
 ####
 # Write the config.h
-# TODO: replace for tiny_dnn/config.h
+# TODO: replace for tiny_dnn/config/config.h
 # configure_file(cmake/Templates/tinydnn_config.h.in
 #               "${PROJECT_BINARY_DIR}/tinydnn_config.h")
 

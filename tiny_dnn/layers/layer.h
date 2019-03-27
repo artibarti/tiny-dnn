@@ -20,7 +20,7 @@
 #include <vector>
 
 #include "tiny_dnn/core/backend.h"
-#include "tiny_dnn/node.h"
+#include "tiny_dnn/network/node.h"
 
 #include "tiny_dnn/util/parallel_for.h"
 #include "tiny_dnn/util/product.h"
