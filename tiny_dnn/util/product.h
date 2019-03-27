@@ -19,7 +19,7 @@
 #include "tiny_dnn/core/kernels/avx_kernel_common.h"
 #endif
 
-#include "tiny_dnn/util/macro.h"
+#include "tiny_dnn/util/config/config.h"
 
 namespace vectorize {
 namespace detail {

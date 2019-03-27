@@ -35,8 +35,6 @@
 #include <cereal/types/vector.hpp>
 #endif
 
-#include "tiny_dnn/util/types/aligned_allocator.h"
-#include "tiny_dnn/util/macro.h"
 #include "tiny_dnn/util/nn_error.h"
 #include "tiny_dnn/util/parallel_for.h"
 #include "tiny_dnn/util/product.h"

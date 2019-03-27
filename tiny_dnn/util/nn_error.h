@@ -31,9 +31,7 @@ class nn_error : public std::exception {
 class nn_warn {
  public:
   explicit nn_warn(const std::string &msg) : msg_(msg) {
-#ifdef CNN_USE_STDOUT
     coloredPrint(Color::YELLOW, msg_h_ + msg_);
-#endif
   }
 
  private:
@@ -47,9 +45,7 @@ class nn_warn {
 class nn_info {
  public:
   explicit nn_info(const std::string &msg) : msg_(msg) {
-#ifdef CNN_USE_STDOUT
     std::cout << msg_h + msg_ << std::endl;
-#endif
   }
 
  private:

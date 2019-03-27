@@ -8,15 +8,17 @@
 #pragma once
 
 #include <string>
+#include <cstddef>
+#include <cstdint>
 
 #include "tiny_dnn/util/config/config.h"
 #include "tiny_dnn/util/types/types.h"
 
 #ifdef CNN_WINDOWS
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif  // ifdef NOMINMAX
-#include <Windows.h>
+  #ifndef NOMINMAX
+    #define NOMINMAX
+  #endif 
+  #include <Windows.h>
 #endif
 
 namespace tiny_dnn {
