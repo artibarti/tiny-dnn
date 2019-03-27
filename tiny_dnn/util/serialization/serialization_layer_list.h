@@ -22,8 +22,7 @@ void register_layers(T* h) {
   h->template register_layer<deconvolutional_layer>("deconv");
   h->template register_layer<dropout_layer>("dropout");
   h->template register_layer<fully_connected_layer>("fully_connected");
-  h->template register_layer<global_average_pooling_layer>(
-    "global_average_pooling");
+  h->template register_layer<global_average_pooling_layer>("global_average_pooling");
   h->template register_layer<input_layer>("input");
   h->template register_layer<linear_layer>("linear");
   h->template register_layer<lrn_layer>("lrn");
@@ -32,8 +31,7 @@ void register_layers(T* h) {
   h->template register_layer<power_layer>("power");
   h->template register_layer<quantized_convolutional_layer>("q_conv");
   h->template register_layer<quantized_deconvolutional_layer>("q_deconv");
-  h->template register_layer<quantized_fully_connected_layer>(
-    "q_fully_connected");
+  h->template register_layer<quantized_fully_connected_layer>("q_fully_connected");
   h->template register_layer<recurrent_layer>("recurrent_layer");
   h->template register_layer<gru_cell>("gru_cell");
   h->template register_layer<l2_normalization_layer>("l2norm");
@@ -55,4 +53,4 @@ void register_layers(T* h) {
   h->template register_layer<selu_layer>("selu");
 }
 
-}  // namespace tiny_dnn
+}

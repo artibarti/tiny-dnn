@@ -49,7 +49,7 @@
 
 #ifdef CNN_USE_GEMMLOWP
 #include "tiny_dnn/layers/quantized_fully_connected_layer.h"
-#endif  // CNN_USE_GEMMLOWP
+#endif
 
 #include "tiny_dnn/lossfunctions/loss_function.h"
 #include "tiny_dnn/optimizers/optimizer.h"
@@ -67,15 +67,15 @@
 
 #ifdef DNN_USE_IMAGE_API
 #include "tiny_dnn/util/image.h"
-#endif  // DNN_USE_IMAGE_API
+#endif
 
 #ifdef USE_OPENCL
 #include "tiny_dnn/opencl_util/opencl_util.h"
-#endif // USE_OPENCL
+#endif
 
 #ifndef CNN_NO_SERIALIZATION
-#include "tiny_dnn/util/deserialization_helper.h"
-#include "tiny_dnn/util/serialization_helper.h"
+#include "tiny_dnn/util/serialization/deserialization_helper.h"
+#include "tiny_dnn/util/serialization/serialization_helper.h"
 // to allow upcasting
 CEREAL_REGISTER_TYPE(tiny_dnn::elu_layer)
 CEREAL_REGISTER_TYPE(tiny_dnn::leaky_relu_layer)
