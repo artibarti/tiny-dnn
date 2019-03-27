@@ -11,7 +11,7 @@
 namespace tiny_dnn {
   namespace math {
 
-	template<typename T, core::backend_t backend = core::backend_t::internal>
+	template<typename T = float_t, core::backend_t backend = core::backend_t::internal>
 	void subtract(const Matrix<T>& left, const Matrix<T>& right, Matrix<T>& result, 
 		bool resizeResultIfNeeded = false) {
 

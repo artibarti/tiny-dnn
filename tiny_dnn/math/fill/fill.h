@@ -11,7 +11,7 @@
 namespace tiny_dnn {
   namespace math {
 
-	template<typename T, core::backend_t backend = core::backend_t::internal>
+	template<typename T = float_t, core::backend_t backend = core::backend_t::internal>
 	void fill(Matrix<T>& mat, const T& value = 0) {
 
 			if (!isSupportedBackend(Operation::fill, backend)) {
