@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string>
 #include <utility>
+#include <iostream>
 
 #ifdef _WIN32
 #include <malloc.h>
@@ -19,12 +20,11 @@
 #include <mm_malloc.h>
 #endif
 
-#include "tiny_dnn/util/nn_error.h"
-
 namespace tiny_dnn {
 
 template <typename T, std::size_t alignment>
 class aligned_allocator {
+
  public:
   typedef T value_type;
   typedef T *pointer;
@@ -48,11 +48,14 @@ class aligned_allocator {
     return std::addressof(value);
   }
 
-  pointer address(reference value) const { return std::addressof(value); }
+  pointer address(reference value) const {
+    return std::addressof(value);
+  }
 
   pointer allocate(size_type size, const void * = nullptr) {
     void *p = aligned_alloc(alignment, sizeof(T) * size);
-    if (!p && size > 0) throw nn_error("failed to allocate");
+    if (!p && size > 0) 
+      throw std::runtime_error("failed to allocate");
     return static_cast<pointer>(p);
   }
 
@@ -60,7 +63,9 @@ class aligned_allocator {
     return ~static_cast<std::size_t>(0) / sizeof(T);
   }
 
-  void deallocate(pointer ptr, size_type) { aligned_free(ptr); }
+  void deallocate(pointer ptr, size_type) {
+    aligned_free(ptr);
+  }
 
   template <class U, class V>
   void construct(U *ptr, const V &value) {
@@ -86,43 +91,46 @@ class aligned_allocator {
   }
 
  private:
+
   void *aligned_alloc(size_type align, size_type size) const {
-#if defined(_MSC_VER)
-    return ::_aligned_malloc(size, align);
-#elif defined(__ANDROID__)
-    return ::memalign(align, size);
-#elif defined(__MINGW32__)
-    return ::_mm_malloc(size, align);
-#else  // posix assumed
-    void *p;
-    if (::posix_memalign(&p, align, size) != 0) {
-      p = 0;
-    }
-    return p;
-#endif
+    #if defined(_MSC_VER)
+      return ::_aligned_malloc(size, align);
+    #elif defined(__ANDROID__)
+      return ::memalign(align, size);
+    #elif defined(__MINGW32__)
+      return ::_mm_malloc(size, align);
+    #else  // posix assumed
+      void *p;
+      if (::posix_memalign(&p, align, size) != 0) {
+        p = 0;
+      }
+      return p;
+    #endif
   }
 
   void aligned_free(pointer ptr) {
-#if defined(_MSC_VER)
-    ::_aligned_free(ptr);
-#elif defined(__MINGW32__)
-    ::_mm_free(ptr);
-#else
-    ::free(ptr);
-#endif
+    #if defined(_MSC_VER)
+      ::_aligned_free(ptr);
+    #elif defined(__MINGW32__)
+      ::_mm_free(ptr);
+    #else
+      ::free(ptr);
+    #endif
   }
 };
 
 template <typename T1, typename T2, std::size_t alignment>
 inline bool operator==(const aligned_allocator<T1, alignment> &,
-                       const aligned_allocator<T2, alignment> &) {
+  const aligned_allocator<T2, alignment> &) {
+    
   return true;
 }
 
 template <typename T1, typename T2, std::size_t alignment>
 inline bool operator!=(const aligned_allocator<T1, alignment> &,
-                       const aligned_allocator<T2, alignment> &) {
+  const aligned_allocator<T2, alignment> &) {
+  
   return false;
 }
 
-}  // namespace tiny_dnn
+}

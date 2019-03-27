@@ -82,7 +82,7 @@
     <ClInclude Include="..\..\tiny_dnn\util\product.h" />
     <ClInclude Include="..\..\tiny_dnn\util\nn_error.h" />
     <ClInclude Include="..\..\tiny_dnn\util\util.h" />
-    <ClInclude Include="..\..\tiny_dnn\util\aligned_allocator.h" />
+    <ClInclude Include="..\..\tiny_dnn\util\types\aligned_allocator.h" />
     <ClInclude Include="..\..\tiny_dnn\util\target_cost.h" />
     <ClInclude Include="..\..\tiny_dnn\io\mnist_parser.h" />
     <ClInclude Include="..\..\tiny_dnn\io\cifar10_parser.h" />

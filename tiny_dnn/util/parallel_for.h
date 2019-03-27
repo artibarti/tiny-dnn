@@ -16,7 +16,7 @@
 #include <vector>
 
 #include "tiny_dnn/config/config.h"
-#include "tiny_dnn/util/aligned_allocator.h"
+#include "tiny_dnn/util/types/aligned_allocator.h"
 #include "tiny_dnn/util/nn_error.h"
 
 #ifdef CNN_USE_TBB

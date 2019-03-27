@@ -195,7 +195,7 @@
     <ClInclude Include="..\..\tiny_dnn\optimizers\optimizer.h">
       <Filter>optimizers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tiny_dnn\util\aligned_allocator.h">
+    <ClInclude Include="..\..\tiny_dnn\util\types\aligned_allocator.h">
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tiny_dnn\util\deform.h">
