@@ -21,6 +21,7 @@
 #include <utility>
 #include <vector>
 
+#include "tiny_dnn/util/types.h"
 #include "tiny_dnn/config/config.h"
 
 #ifndef CNN_NO_SERIALIZATION
@@ -43,6 +44,7 @@
 
 namespace tiny_dnn {
 
+/*
 // output label(class-index) for classification must be equal to size_t,
 // because size of last layer is equal to number of classes
 typedef size_t label_t;
@@ -54,6 +56,7 @@ typedef std::vector<float_t, aligned_allocator<float_t, 64>> vec_t;
 typedef std::vector<vec_t> tensor_t;
 
 enum class net_phase { train, test };
+*/
 
 enum class padding {
   valid,  // use valid pixels of input
@@ -284,18 +287,6 @@ inline std::vector<vector_type> std_input_order(bool has_bias) {
     return {vector_type::data, vector_type::weight, vector_type::bias};
   } else {
     return {vector_type::data, vector_type::weight};
-  }
-}
-
-inline void fill_tensor(tensor_t &tensor, float_t value) {
-  for (auto &t : tensor) {
-    vectorize::fill(&t[0], t.size(), value);
-  }
-}
-
-inline void fill_tensor(tensor_t &tensor, float_t value, size_t size) {
-  for (auto &t : tensor) {
-    t.resize(size, value);
   }
 }
 

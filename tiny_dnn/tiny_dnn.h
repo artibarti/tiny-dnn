@@ -7,6 +7,7 @@
 */
 #pragma once
 
+#include "tiny_dnn/util/types.h"
 #include "tiny_dnn/config/config.h"
 
 #include "tiny_dnn/network/network.h"
