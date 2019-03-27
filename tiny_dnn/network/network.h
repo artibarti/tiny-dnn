@@ -673,98 +673,98 @@ class network {
   const_iterator begin() const { return net_.begin(); }
   const_iterator end() const { return net_.end(); }
 
-  void load(const std::string &filename,
-            content_type what  = content_type::weights_and_model,
-            file_format format = file_format::binary) {
-#ifndef CNN_NO_SERIALIZATION
-    std::ifstream ifs(filename.c_str(), std::ios::binary | std::ios::in);
-    if (ifs.fail() || ifs.bad()) throw nn_error("failed to open:" + filename);
+  void load(const std::string &filename, content_type what  = content_type::weights_and_model,
+    file_format format = file_format::binary) {
 
-    switch (format) {
-      case file_format::binary: {
-        cereal::BinaryInputArchive bi(ifs);
-        from_archive(bi, what);
-      } break;
-      case file_format::portable_binary: {
-        cereal::PortableBinaryInputArchive bi(ifs);
-        from_archive(bi, what);
-      } break;
-      case file_format::json: {
-        cereal::JSONInputArchive ji(ifs);
-        from_archive(ji, what);
-      } break;
-      default: throw nn_error("invalid serialization format");
-    }
-#else
-    throw nn_error("tiny-dnn was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+    #ifndef CNN_NO_SERIALIZATION
+      std::ifstream ifs(filename.c_str(), std::ios::binary | std::ios::in);
+      if (ifs.fail() || ifs.bad()) throw nn_error("failed to open:" + filename);
+
+      switch (format) {
+        case file_format::binary: {
+          cereal::BinaryInputArchive bi(ifs);
+          from_archive(bi, what);
+        } break;
+        case file_format::portable_binary: {
+          cereal::PortableBinaryInputArchive bi(ifs);
+          from_archive(bi, what);
+        } break;
+        case file_format::json: {
+          cereal::JSONInputArchive ji(ifs);
+          from_archive(ji, what);
+        } break;
+        default: throw nn_error("invalid serialization format");
+      }
+    #else
+      throw nn_error("tiny-dnn was not built with Serialization support");
+    #endif
   }
 
-  void save(const std::string &filename,
-            content_type what  = content_type::weights_and_model,
-            file_format format = file_format::binary) const {
-#ifndef CNN_NO_SERIALIZATION
-    std::ofstream ofs(filename.c_str(), std::ios::binary | std::ios::out);
-    if (ofs.fail() || ofs.bad()) throw nn_error("failed to open:" + filename);
+  void save(const std::string &filename, content_type what  = content_type::weights_and_model,
+    file_format format = file_format::binary) const {
 
-    switch (format) {
-      case file_format::binary: {
-        cereal::BinaryOutputArchive bo(ofs);
-        to_archive(bo, what);
-      } break;
-      case file_format::portable_binary: {
-        cereal::PortableBinaryOutputArchive bo(ofs);
-        to_archive(bo, what);
-      } break;
-      case file_format::json: {
-        cereal::JSONOutputArchive jo(ofs);
-        to_archive(jo, what);
-      } break;
-      default: throw nn_error("invalid serialization format");
-    }
-#else
-    throw nn_error("tiny-dnn was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+    #ifndef CNN_NO_SERIALIZATION
+      std::ofstream ofs(filename.c_str(), std::ios::binary | std::ios::out);
+      if (ofs.fail() || ofs.bad()) throw nn_error("failed to open:" + filename);
+
+      switch (format) {
+        case file_format::binary: {
+          cereal::BinaryOutputArchive bo(ofs);
+          to_archive(bo, what);
+        } break;
+        case file_format::portable_binary: {
+          cereal::PortableBinaryOutputArchive bo(ofs);
+          to_archive(bo, what);
+        } break;
+        case file_format::json: {
+          cereal::JSONOutputArchive jo(ofs);
+          to_archive(jo, what);
+        } break;
+        default: throw nn_error("invalid serialization format");
+      }
+    #else
+      throw nn_error("tiny-dnn was not built with Serialization support");
+    #endif
   }
 
   /**
    * save the network architecture as json string
    **/
   std::string to_json(content_type what = content_type::model) const {
-#ifndef CNN_NO_SERIALIZATION
-    std::stringstream ss;
-    {
-      cereal::JSONOutputArchive oa(ss);
-      to_archive(oa, what);
-    }
-    return ss.str();
-#else
-    throw nn_error("tiny-dnn was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+    
+    #ifndef CNN_NO_SERIALIZATION
+      std::stringstream ss;
+      {
+        cereal::JSONOutputArchive oa(ss);
+        to_archive(oa, what);
+      }
+      return ss.str();
+    #else
+      throw nn_error("tiny-dnn was not built with Serialization support");
+    #endif
   }
 
   /**
    * load the network architecture from json string
    **/
-  void from_json(const std::string &json_string,
-                 content_type what = content_type::model) {
-#ifndef CNN_NO_SERIALIZATION
-    std::stringstream ss;
-    ss << json_string;
-    cereal::JSONInputArchive ia(ss);
-    from_archive(ia, what);
-#else
-    throw nn_error("tiny-dnn was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+  void from_json(const std::string &json_string, content_type what = content_type::model) {
+    #ifndef CNN_NO_SERIALIZATION
+      std::stringstream ss;
+      ss << json_string;
+      cereal::JSONInputArchive ia(ss);
+      from_archive(ia, what);
+    #else
+      throw nn_error("tiny-dnn was not built with Serialization support");
+    #endif
   }
 
-  ///< @deprecated use save(filename,target,format) instead.
+  // @deprecated use save(filename,target,format) instead.
   void save(std::ostream &os) const {
     os.precision(std::numeric_limits<tiny_dnn::float_t>::digits10);
     net_.save(os);
   }
 
-  ///< @deprecated use load(filename,target,format) instead.
+  // @deprecated use load(filename,target,format) instead.
   void load(std::istream &is) {
     is.precision(std::numeric_limits<tiny_dnn::float_t>::digits10);
     net_.load(is);
@@ -778,34 +778,28 @@ class network {
     FILE *stream = fopen(filepath, "r");
     std::vector<float_t> data;
     double temp;
-    while (fscanf(stream, "%lf", &temp) > 0) data.push_back(float_t(temp));
+    while (fscanf(stream, "%lf", &temp) > 0)
+      data.push_back(float_t(temp));
     fclose(stream);
-
     net_.load(data);
   }
 
   template <typename OutputArchive>
-  void to_archive(OutputArchive &ar,
-                  content_type what = content_type::weights_and_model) const {
-    if (what == content_type::model ||
-        what == content_type::weights_and_model) {
+  void to_archive(OutputArchive &ar, content_type what = content_type::weights_and_model) const {
+    if (what == content_type::model || what == content_type::weights_and_model) {
       net_.save_model(ar);
     }
-    if (what == content_type::weights ||
-        what == content_type::weights_and_model) {
+    if (what == content_type::weights || what == content_type::weights_and_model) {
       net_.save_weights(ar);
     }
   }
 
   template <typename InputArchive>
-  void from_archive(InputArchive &ar,
-                    content_type what = content_type::weights_and_model) {
-    if (what == content_type::model ||
-        what == content_type::weights_and_model) {
+  void from_archive(InputArchive &ar, content_type what = content_type::weights_and_model) {
+    if (what == content_type::model || what == content_type::weights_and_model) {
       net_.load_model(ar);
     }
-    if (what == content_type::weights ||
-        what == content_type::weights_and_model) {
+    if (what == content_type::weights || what == content_type::weights_and_model) {
       net_.load_weights(ar);
     }
   }
@@ -824,53 +818,37 @@ class network {
   template <typename Layer>
   friend network<sequential> &operator<<(network<sequential> &n, Layer &&l);
 
-  friend void construct_graph(
-    network<graph> &graph,
+  friend void construct_graph(network<graph> &graph,
     const std::vector<std::shared_ptr<layer>> &inputs,
     const std::vector<std::shared_ptr<layer>> &outputs);
 
   friend void construct_graph(network<graph> &graph,
-                              const std::vector<layer *> &inputs,
-                              const std::vector<layer *> &outputs);
+    const std::vector<layer *> &inputs, const std::vector<layer *> &outputs);
 
-  template <typename Error,
-            typename Optimizer,
-            typename OnBatchEnumerate,
-            typename OnEpochEnumerate>
-  bool fit(Optimizer &optimizer,
-           const std::vector<tensor_t> &inputs,
-           const std::vector<tensor_t> &desired_outputs,
-           size_t batch_size,
-           int epoch,
-           OnBatchEnumerate on_batch_enumerate,
-           OnEpochEnumerate on_epoch_enumerate,
-           const bool reset_weights            = false,
-           const int n_threads                 = CNN_TASK_SIZE,
-           const std::vector<tensor_t> &t_cost = std::vector<tensor_t>()) {
+  template <typename Error, typename Optimizer, typename OnBatchEnumerate, typename OnEpochEnumerate>
+  bool fit(Optimizer &optimizer, const std::vector<tensor_t> &inputs,
+    const std::vector<tensor_t> &desired_outputs, size_t batch_size, int epoch,
+    OnBatchEnumerate on_batch_enumerate, OnEpochEnumerate on_epoch_enumerate,
+    const bool reset_weights = false, const int n_threads = CNN_TASK_SIZE,
+    const std::vector<tensor_t> &t_cost = std::vector<tensor_t>()) {
+    
     // check_training_data(in, t);
     check_target_cost_matrix(desired_outputs, t_cost);
     set_netphase(net_phase::train);
     net_.setup(reset_weights);
 
-    for (auto n : net_) n->set_parallelize(true);
+    for (auto n : net_)
+      n->set_parallelize(true);
     optimizer.reset();
     stop_training_ = false;
     in_batch_.resize(batch_size);
     t_batch_.resize(batch_size);
     for (int iter = 0; iter < epoch && !stop_training_; iter++) {
-      for (size_t i = 0; i < inputs.size() && !stop_training_;
-           i += batch_size) {
-        train_once<Error>(
-          optimizer, &inputs[i], &desired_outputs[i],
+      for (size_t i = 0; i < inputs.size() && !stop_training_; i += batch_size) {
+        train_once<Error>(optimizer, &inputs[i], &desired_outputs[i],
           static_cast<int>(std::min(batch_size, (size_t)inputs.size() - i)),
           n_threads, get_target_cost_sample_pointer(t_cost, i));
         on_batch_enumerate();
-
-        /* if (i % 100 == 0 && layers_.is_exploded()) {
-          std::cout << "[Warning]Detected infinite value in weight. stop
-        learning." << std::endl;
-            return false;
-        } */
       }
       on_epoch_enumerate();
     }
@@ -884,12 +862,9 @@ class network {
    * @param size is the number of data points to use in this batch
    */
   template <typename E, typename Optimizer>
-  void train_once(Optimizer &optimizer,
-                  const tensor_t *in,
-                  const tensor_t *t,
-                  int size,
-                  const int nbThreads,
-                  const tensor_t *t_cost) {
+  void train_once(Optimizer &optimizer, const tensor_t *in,
+    const tensor_t *t, int size, const int nbThreads, const tensor_t *t_cost) {
+    
     if (size == 1) {
       bprop<E>(fprop(in[0]), t[0], t_cost ? t_cost[0] : tensor_t());
       net_.update_weights(&optimizer);
@@ -908,12 +883,9 @@ class network {
    * @param batch_size the number of data points to use in this batch
    */
   template <typename E, typename Optimizer>
-  void train_onebatch(Optimizer &optimizer,
-                      const tensor_t *in,
-                      const tensor_t *t,
-                      int batch_size,
-                      const int num_tasks,
-                      const tensor_t *t_cost) {
+  void train_onebatch(Optimizer &optimizer, const tensor_t *in, const tensor_t *t,
+    int batch_size, const int num_tasks, const tensor_t *t_cost) {
+    
     CNN_UNREFERENCED_PARAMETER(num_tasks);
     std::copy(&in[0], &in[0] + batch_size, &in_batch_[0]);
     std::copy(&t[0], &t[0] + batch_size, &t_batch_[0]);
@@ -925,26 +897,13 @@ class network {
     net_.update_weights(&optimizer);
   }
 
-  //    template <typename E>
-  //    float_t get_loss(const vec_t& out, const vec_t& t) {
-  //        assert(out.size() == t.size());
-  //        return E::f(out, t);
-  //    }
-
   template <typename E>
-  bool calc_delta(const std::vector<tensor_t> &in,
-                  const std::vector<tensor_t> &v,
-                  vec_t &w,
-                  tensor_t &dw,
-                  size_t check_index,
-                  double eps) {
-    static const float_t delta =
-      std::sqrt(std::numeric_limits<float_t>::epsilon());
-
+  bool calc_delta(const std::vector<tensor_t> &in, const std::vector<tensor_t> &v,
+    vec_t &w, tensor_t &dw, size_t check_index, double eps) {
+    
+    static const float_t delta = std::sqrt(std::numeric_limits<float_t>::epsilon());
     assert(in.size() == v.size());
-
     const size_t sample_count = in.size();
-
     assert(sample_count > 0);
 
     // at the moment, channel count must be 1
@@ -958,21 +917,20 @@ class network {
 
     // calculate dw/dE by numeric
     float_t prev_w = w[check_index];
-
-    float_t f_p    = float_t(0);
+    float_t f_p = float_t(0);
     w[check_index] = prev_w + delta;
     for (size_t i = 0; i < sample_count; i++) {
       f_p += get_loss<E>(in[i], v[i]);
     }
 
-    float_t f_m    = float_t(0);
+    float_t f_m = float_t(0);
     w[check_index] = prev_w - delta;
     for (size_t i = 0; i < sample_count; i++) {
       f_m += get_loss<E>(in[i], v[i]);
     }
 
     float_t delta_by_numerical = (f_p - f_m) / (float_t(2) * delta);
-    w[check_index]             = prev_w;
+    w[check_index] = prev_w;
 
     // calculate dw/dE by bprop
     bprop<E>(fprop(in), v, std::vector<tensor_t>());
@@ -996,7 +954,6 @@ class network {
         os << "\n(for regression, use vector<vec_t> ";
         os << "instead of vector<label_t> for training signal)\n";
       }
-
       throw nn_error("output dimension mismatch!\n " + os.str());
     }
   }
@@ -1005,14 +962,12 @@ class network {
     if (t.size() != dim_out) {
       throw nn_error(
         format_str("output dimension mismatch!\n dim(target[%u])=%u, "
-                   "dim(network output size=%u",
-                   i, t.size(), dim_out));
+          "dim(network output size=%u", i, t.size(), dim_out));
     }
   }
 
   template <typename T>
-  void check_training_data(const std::vector<vec_t> &in,
-                           const std::vector<T> &t) {
+  void check_training_data(const std::vector<vec_t> &in, const std::vector<T> &t) {
     size_t dim_in  = in_data_size();
     size_t dim_out = out_data_size();
 
@@ -1026,20 +981,18 @@ class network {
       if (in[i].size() != dim_in) {
         throw nn_error(
           format_str("input dimension mismatch!\n dim(data[%u])=%d, "
-                     "dim(network input)=%u",
-                     i, in[i].size(), dim_in));
+            "dim(network input)=%u", i, in[i].size(), dim_in));
       }
       check_t(i, t[i], dim_out);
     }
   }
 
-  void check_target_cost_matrix(const std::vector<tensor_t> &t,
-                                const std::vector<tensor_t> &t_cost) {
+  void check_target_cost_matrix(const std::vector<tensor_t> &t, 
+    const std::vector<tensor_t> &t_cost) {
+    
     if (!t_cost.empty()) {
       if (t.size() != t_cost.size()) {
-        throw nn_error(
-          "if target cost is supplied, "
-          "its length must equal that of target data");
+        throw nn_error("if target cost is supplied, its length must equal that of target data");
       }
 
       for (size_t i = 0, end = t.size(); i < end; i++) {
@@ -1051,17 +1004,13 @@ class network {
   // regression
   void check_target_cost_element(const vec_t &t, const vec_t &t_cost) {
     if (t.size() != t_cost.size()) {
-      throw nn_error(
-        "if target cost is supplied for a regression task, "
-        "its shape must be identical to the target data");
+      throw nn_error("if target cost is supplied for a regression task, its shape must be identical to the target data");
     }
   }
 
   void check_target_cost_element(const tensor_t &t, const tensor_t &t_cost) {
     if (t.size() != t_cost.size()) {
-      throw nn_error(
-        "if target cost is supplied for a regression task, "
-        "its shape must be identical to the target data");
+      throw nn_error("if target cost is supplied for a regression task, its shape must be identical to the target data");
     }
     for (size_t i = 0; i < t.size(); i++)
       check_target_cost_element(t[i], t_cost[i]);
@@ -1077,20 +1026,17 @@ class network {
     }
   }
 
-  void normalize_tensor(const std::vector<tensor_t> &inputs,
-                        std::vector<tensor_t> &normalized) {
+  void normalize_tensor(const std::vector<tensor_t> &inputs, std::vector<tensor_t> &normalized) {
     normalized = inputs;
   }
 
-  void normalize_tensor(const std::vector<vec_t> &inputs,
-                        std::vector<tensor_t> &normalized) {
+  void normalize_tensor(const std::vector<vec_t> &inputs, std::vector<tensor_t> &normalized) {
     normalized.reserve(inputs.size());
     for (size_t i = 0; i < inputs.size(); i++)
       normalized.emplace_back(tensor_t{inputs[i]});
   }
 
-  void normalize_tensor(const std::vector<label_t> &inputs,
-                        std::vector<tensor_t> &normalized) {
+  void normalize_tensor(const std::vector<label_t> &inputs, std::vector<tensor_t> &normalized) {
     std::vector<vec_t> vec;
     normalized.reserve(inputs.size());
     net_.label2vec(inputs, vec);
@@ -1115,33 +1061,30 @@ class network {
  * patch is sizepatch*sizepatch ]
  * @return [vector of vec_c (sample) to be passed to test function]
  */
-inline std::vector<vec_t> image2vec(const float_t *data,
-                                    const size_t rows,
-                                    const size_t cols,
-                                    const size_t sizepatch,
-                                    const size_t step = 1) {
+inline std::vector<vec_t> image2vec(const float_t *data, const size_t rows,
+  const size_t cols, const size_t sizepatch, const size_t step = 1) {
+  
   assert(step > 0);
   std::vector<vec_t> res(
     (cols - sizepatch) * (rows - sizepatch) / (step * step),
     vec_t(sizepatch * sizepatch));
+  
   for_i((cols - sizepatch) * (rows - sizepatch) / (step * step),
-        [&](size_t count) {
-          const size_t j = step * (count / ((cols - sizepatch) / step));
-          const size_t i = step * (count % ((cols - sizepatch) / step));
+    [&](size_t count) {
+      const size_t j = step * (count / ((cols - sizepatch) / step));
+      const size_t i = step * (count % ((cols - sizepatch) / step));
 
-          // vec_t sample(sizepatch*sizepatch);
+      // vec_t sample(sizepatch*sizepatch);
 
-          if ((i + sizepatch) < cols && (j + sizepatch) < rows) {
-            for (size_t k = 0; k < (sizepatch * sizepatch); k++) {
-              // for_i(sizepatch*sizepatch, [&](size_t k) {
-              size_t y      = k / sizepatch + j;
-              size_t x      = k % sizepatch + i;
-              res[count][k] = data[x + y * cols];
-            }
-            //});
-            // res[count] = (sample);
-          }
-        });
+      if ((i + sizepatch) < cols && (j + sizepatch) < rows) {
+        for (size_t k = 0; k < (sizepatch * sizepatch); k++) {
+          size_t y = k / sizepatch + j;
+          size_t x = k % sizepatch + i;
+          res[count][k] = data[x + y * cols];
+        }
+      }
+    }
+  );
   return res;
 }
 
@@ -1166,23 +1109,18 @@ std::basic_istream<Char, CharTraits> &operator>>(
 }
 
 inline void construct_graph(network<graph> &graph,
-                            const std::vector<layer *> &inputs,
-                            const std::vector<layer *> &outputs) {
+  const std::vector<layer *> &inputs, const std::vector<layer *> &outputs) {
   graph.net_.construct(inputs, outputs);
 }
 
-inline void construct_graph(
-  network<graph> &graph,
-  const std::vector<std::shared_ptr<layer>> &inputs,
+inline void construct_graph(network<graph> &graph, const std::vector<std::shared_ptr<layer>> &inputs,
   const std::vector<std::shared_ptr<layer>> &outputs) {
+  
   std::vector<layer *> in_ptr, out_ptr;
   auto shared2ptr = [](std::shared_ptr<layer> l) { return l.get(); };
 
-  std::transform(inputs.begin(), inputs.end(), std::back_inserter(in_ptr),
-                 shared2ptr);
-  std::transform(outputs.begin(), outputs.end(), std::back_inserter(out_ptr),
-                 shared2ptr);
-
+  std::transform(inputs.begin(), inputs.end(), std::back_inserter(in_ptr), shared2ptr);
+  std::transform(outputs.begin(), outputs.end(), std::back_inserter(out_ptr), shared2ptr);
   graph.net_.construct(in_ptr, out_ptr);
 }
 

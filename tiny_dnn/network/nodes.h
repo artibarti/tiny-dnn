@@ -14,8 +14,8 @@
 #include <vector>
 
 #ifndef CNN_NO_SERIALIZATION
-#include <cereal/types/tuple.hpp>
-#include <cereal/types/utility.hpp>
+  #include <cereal/types/tuple.hpp>
+  #include <cereal/types/utility.hpp>
 #endif
 
 #include "tiny_dnn/layers/layer.h"
@@ -26,31 +26,32 @@ namespace cereal {
 
 template <typename Archive>
 void save(Archive &ar, const std::vector<tiny_dnn::layer *> &v) {
-#ifndef CNN_NO_SERIALIZATION
-  ar(cereal::make_size_tag(static_cast<cereal::size_type>(v.size())));
-  for (auto n : v) {
-    tiny_dnn::layer::save_layer(ar, *n);
-  }
-#else
-  throw tiny_dnn::nn_error("tiny-dnn was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+
+  #ifndef CNN_NO_SERIALIZATION
+    ar(cereal::make_size_tag(static_cast<cereal::size_type>(v.size())));
+    for (auto n : v) {
+      tiny_dnn::layer::save_layer(ar, *n);
+    }
+  #else
+    throw tiny_dnn::nn_error("tiny-dnn was not built with Serialization support");
+  #endif
 }
 
 template <typename Archive>
 void load(Archive &ar, std::vector<std::shared_ptr<tiny_dnn::layer>> &v) {
-#ifndef CNN_NO_SERIALIZATION
-  cereal::size_type size;
-  ar(cereal::make_size_tag(size));
+  #ifndef CNN_NO_SERIALIZATION
+    cereal::size_type size;
+    ar(cereal::make_size_tag(size));
 
-  for (size_t i = 0; i < size; i++) {
-    v.emplace_back(tiny_dnn::layer::load_layer(ar));
-  }
-#else
-  throw tiny_dnn::nn_error("tiny-dnn was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+    for (size_t i = 0; i < size; i++) {
+      v.emplace_back(tiny_dnn::layer::load_layer(ar));
+    }
+  #else
+    throw tiny_dnn::nn_error("tiny-dnn was not built with Serialization support");
+  #endif
 }
 
-}  // namespace cereal
+}
 
 namespace tiny_dnn {
 
@@ -67,19 +68,19 @@ namespace tiny_dnn {
  * (to avoid double-free).
  *
  *     sequential s;
- *     s.add(fc(100, 200));                          // rvalue, moved into nodes
+ *     s.add(fc(100, 200)); // rvalue, moved into nodes
  *
- *     s.add(std::make_shared<fc>(200, 100));        // shared_ptr, shared by
- *nodes
+ *     s.add(std::make_shared<fc>(200, 100)); // shared_ptr, shared by nodes
  *
  *     fc out(100, 10);
  *     softmax sft();
- *     s.add(out);                                   // lvalue, hold raw-pointer
- *only
+ *     s.add(out); // lvalue, hold raw-pointer only
  *
  **/
 class nodes {
+
  public:
+
   typedef std::vector<layer *>::iterator iterator;
   typedef std::vector<layer *>::const_iterator const_iterator;
 
@@ -94,8 +95,7 @@ class nodes {
    * @param first input  : data vectors
    * @param worker_index : id of worker-task
    **/
-  virtual std::vector<tensor_t> forward(
-    const std::vector<tensor_t> &first) = 0;  // NOLINT
+  virtual std::vector<tensor_t> forward(const std::vector<tensor_t> &first) = 0;  // NOLINT
 
   /**
    * update weights and clear all gradients
@@ -121,27 +121,55 @@ class nodes {
     }
   }
 
-  size_t size() const { return nodes_.size(); }
-  iterator begin() { return nodes_.begin(); }
-  iterator end() { return nodes_.end(); }
-  const_iterator begin() const { return nodes_.begin(); }
-  const_iterator end() const { return nodes_.end(); }
-  layer *operator[](size_t index) { return nodes_[index]; }
-  const layer *operator[](size_t index) const { return nodes_[index]; }
-  size_t in_data_size() const { return nodes_.front()->in_data_size(); }
-  size_t out_data_size() const { return nodes_.back()->out_data_size(); }
+  size_t size() const {
+    return nodes_.size();
+  }
+  
+  iterator begin() {
+    return nodes_.begin();
+  }
+  
+  iterator end() {
+    return nodes_.end();
+  }
+  
+  const_iterator begin() const {
+    return nodes_.begin();
+  }
+  
+  const_iterator end() const {
+    return nodes_.end();
+  }
+  
+  layer *operator[](size_t index) {
+    return nodes_[index];
+  }
+  
+  const layer *operator[](size_t index) const {
+    return nodes_[index];
+  }
+  
+  size_t in_data_size() const {
+    return nodes_.front()->in_data_size();
+  }
+  
+  size_t out_data_size() const {
+    return nodes_.back()->out_data_size();
+  }
 
   template <typename T>
   const T &at(size_t index) const {
     const T *v = dynamic_cast<const T *>(nodes_[index]);
-    if (v) return *v;
+    if (v)
+      return *v;
     throw nn_error("failed to cast");
   }
 
   template <typename T>
   T &at(size_t index) {
     T *v = dynamic_cast<T *>(nodes_[index]);
-    if (v) return *v;
+    if (v)
+      return *v;
     throw nn_error("failed to cast");
   }
 
@@ -188,8 +216,7 @@ class nodes {
     }
   }
 
-  void label2vec(const std::vector<label_t> &labels,
-                 std::vector<vec_t> &vec) const {
+  void label2vec(const std::vector<label_t> &labels,std::vector<vec_t> &vec) const {
     return label2vec(&labels[0], labels.size(), vec);
   }
 
@@ -272,7 +299,9 @@ class nodes {
  * single-input, single-output feedforward network
  **/
 class sequential : public nodes {
+ 
  public:
+
   void backward(const std::vector<tensor_t> &first) override {
     std::vector<std::vector<const vec_t *>> reordered_grad;
     reorder_for_layerwise_processing(first, reordered_grad);
@@ -304,8 +333,8 @@ class sequential : public nodes {
 
   template <typename T>
   void add(T &&layer) {
+    
     push_back(std::forward<T>(layer));
-
     if (nodes_.size() != 1) {
       auto head = nodes_[nodes_.size() - 2];
       auto tail = nodes_[nodes_.size() - 1];
@@ -320,7 +349,6 @@ class sequential : public nodes {
     for (size_t i = 0; i < nodes_.size() - 1; i++) {
       auto out = nodes_[i]->outputs();
       auto in  = nodes_[i + 1]->inputs();
-
       if (out[0] != in[0]) {
         throw nn_error("");
       }
@@ -454,31 +482,25 @@ class graph : public nodes {
   friend class nodes;
 
   struct _graph_connection {
-    void add_connection(size_t head,
-                        size_t tail,
-                        size_t head_index,
-                        size_t tail_index) {
+    
+    void add_connection(size_t head, size_t tail, size_t head_index, size_t tail_index) {  
       if (!is_connected(head, tail, head_index, tail_index)) {
         connections.emplace_back(head, tail, head_index, tail_index);
       }
     }
 
-    bool is_connected(size_t head,
-                      size_t tail,
-                      size_t head_index,
-                      size_t tail_index) const {
+    bool is_connected(size_t head, size_t tail, size_t head_index, size_t tail_index) const {
       return std::find(connections.begin(), connections.end(),
-                       std::make_tuple(head, tail, head_index, tail_index)) !=
-             connections.end();
+        std::make_tuple(head, tail, head_index, tail_index)) != connections.end();
     }
 
     template <typename Archive>
     void serialize(Archive &ar) {
-#ifndef CNN_NO_SERIALIZATION
-      ar(CEREAL_NVP(connections), CEREAL_NVP(in_nodes), CEREAL_NVP(out_nodes));
-#else
-      throw nn_error("TinyDNN was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+      #ifndef CNN_NO_SERIALIZATION
+        ar(CEREAL_NVP(connections), CEREAL_NVP(in_nodes), CEREAL_NVP(out_nodes));
+      #else
+        throw nn_error("TinyDNN was not built with Serialization support");
+      #endif
     }
 
     std::vector<std::tuple<size_t, size_t, size_t, size_t>> connections;
@@ -487,61 +509,57 @@ class graph : public nodes {
 
   template <typename OutputArchive>
   void save_connections(OutputArchive &oa) const {
-#ifndef CNN_NO_SERIALIZATION
-    _graph_connection gc;
-    std::unordered_map<node *, size_t> node2id;
-    size_t idx = 0;
-
-    for (auto n : nodes_) {
-      node2id[n] = idx++;
-    }
-    for (auto l : input_layers_) {
-      gc.in_nodes.push_back(node2id[l]);
-    }
-    for (auto l : output_layers_) {
-      gc.out_nodes.push_back(node2id[l]);
-    }
-
-    for (auto l : input_layers_) {
-      graph_traverse(l, [=](layer &l) { CNN_UNREFERENCED_PARAMETER(l); },
-                     [&](edge &e) {
-                       auto next         = e.next();
-                       size_t head_index = e.prev()->next_port(e);
-
-                       for (auto n : next) {
-                         size_t tail_index = n->prev_port(e);
-                         gc.add_connection(node2id[e.prev()], node2id[n],
-                                           head_index, tail_index);
-                       }
-                     });
-    }
-
-    oa(cereal::make_nvp("graph", gc));
-#else
-    throw nn_error("TinyDNN was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+    #ifndef CNN_NO_SERIALIZATION
+      _graph_connection gc;
+      std::unordered_map<node *, size_t> node2id;
+      size_t idx = 0;
+      for (auto n : nodes_) {
+        node2id[n] = idx++;
+      }
+      for (auto l : input_layers_) {
+        gc.in_nodes.push_back(node2id[l]);
+      }
+      for (auto l : output_layers_) {
+        gc.out_nodes.push_back(node2id[l]);
+      }
+      for (auto l : input_layers_) {
+        graph_traverse(l, [=](layer &l) { CNN_UNREFERENCED_PARAMETER(l); },
+          [&](edge &e) {
+            auto next = e.next();
+            size_t head_index = e.prev()->next_port(e);
+            for (auto n : next) {
+              size_t tail_index = n->prev_port(e);
+              gc.add_connection(node2id[e.prev()], node2id[n], head_index, tail_index);
+            }
+          }
+        );
+      }
+      oa(cereal::make_nvp("graph", gc));
+    #else
+      throw nn_error("TinyDNN was not built with Serialization support");
+    #endif
   }
 
   template <typename InputArchive>
   void load_connections(InputArchive &ia) {
-#ifndef CNN_NO_SERIALIZATION
-    _graph_connection gc;
-    ia(cereal::make_nvp("graph", gc));
+    #ifndef CNN_NO_SERIALIZATION
+      _graph_connection gc;
+      ia(cereal::make_nvp("graph", gc));
 
-    for (auto c : gc.connections) {
-      size_t head, tail, head_index, tail_index;
-      std::tie(head, tail, head_index, tail_index) = c;
-      connect(nodes_[head], nodes_[tail], head_index, tail_index);
-    }
-    for (auto in : gc.in_nodes) {
-      input_layers_.push_back(nodes_[in]);
-    }
-    for (auto out : gc.out_nodes) {
-      output_layers_.push_back(nodes_[out]);
-    }
-#else
-    throw nn_error("TinyDNN was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+      for (auto c : gc.connections) {
+        size_t head, tail, head_index, tail_index;
+        std::tie(head, tail, head_index, tail_index) = c;
+        connect(nodes_[head], nodes_[tail], head_index, tail_index);
+      }
+      for (auto in : gc.in_nodes) {
+        input_layers_.push_back(nodes_[in]);
+      }
+      for (auto out : gc.out_nodes) {
+        output_layers_.push_back(nodes_[out]);
+      }
+    #else
+      throw nn_error("TinyDNN was not built with Serialization support");
+    #endif
   }
 
   // normalize indexing back to [sample][layer][feature]
@@ -549,18 +567,14 @@ class graph : public nodes {
     std::vector<tensor_t> merged;
     std::vector<const tensor_t *> out;
     size_t output_channel_count = output_layers_.size();
-    for (size_t output_channel = 0; output_channel < output_channel_count;
-         ++output_channel) {
+    for (size_t output_channel = 0; output_channel < output_channel_count; ++output_channel) {
       output_layers_[output_channel]->output(out);
-
       size_t sample_count = out[0]->size();
       if (output_channel == 0) {
         assert(merged.empty());
         merged.resize(sample_count, tensor_t(output_channel_count));
       }
-
       assert(merged.size() == sample_count);
-
       for (size_t sample = 0; sample < sample_count; ++sample) {
         merged[sample][output_channel] = (*out[0])[sample];
       }
@@ -574,45 +588,43 @@ class graph : public nodes {
     }
     throw nn_error("invalid connection");
   }
+
   std::vector<layer *> input_layers_;
   std::vector<layer *> output_layers_;
 };
 
 template <typename OutputArchive>
 void nodes::save_model(OutputArchive &oa) const {
-#ifndef CNN_NO_SERIALIZATION
-  oa(cereal::make_nvp("nodes", nodes_));
+  #ifndef CNN_NO_SERIALIZATION
+    oa(cereal::make_nvp("nodes", nodes_));
 
-  if (typeid(*this) == typeid(sequential)) {
-    dynamic_cast<const sequential *>(this)->save_connections(oa);
-  } else {
-    dynamic_cast<const graph *>(this)->save_connections(oa);
-  }
-#else
-  throw nn_error("TinyDNN was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+    if (typeid(*this) == typeid(sequential)) {
+      dynamic_cast<const sequential *>(this)->save_connections(oa);
+    } else {
+      dynamic_cast<const graph *>(this)->save_connections(oa);
+    }
+  #else
+    throw nn_error("TinyDNN was not built with Serialization support");
+  #endif
 }
 
 template <typename InputArchive>
 void nodes::load_model(InputArchive &ia) {
-#ifndef CNN_NO_SERIALIZATION
-  own_nodes_.clear();
-  nodes_.clear();
-
-  ia(cereal::make_nvp("nodes", own_nodes_));
-
-  for (auto &n : own_nodes_) {
-    nodes_.push_back(&*n);
-  }
-
-  if (typeid(*this) == typeid(sequential)) {
-    dynamic_cast<sequential *>(this)->load_connections(ia);
-  } else {
-    dynamic_cast<graph *>(this)->load_connections(ia);
-  }
-#else
-  throw nn_error("TinyDNN was not built with Serialization support");
-#endif  // CNN_NO_SERIALIZATION
+  #ifndef CNN_NO_SERIALIZATION
+    own_nodes_.clear();
+    nodes_.clear();
+    ia(cereal::make_nvp("nodes", own_nodes_));
+    for (auto &n : own_nodes_) {
+      nodes_.push_back(&*n);
+    }
+    if (typeid(*this) == typeid(sequential)) {
+      dynamic_cast<sequential *>(this)->load_connections(ia);
+    } else {
+      dynamic_cast<graph *>(this)->load_connections(ia);
+    }
+  #else
+    throw nn_error("TinyDNN was not built with Serialization support");
+  #endif
 }
 
-}  // namespace tiny_dnn
+}
