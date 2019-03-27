@@ -8,6 +8,7 @@
 #pragma once
 
 #include <vector>
+#include "tiny_dnn/util/types/types.h"
 
 namespace tiny_dnn {
 
@@ -66,4 +67,4 @@ inline std::vector<int> nms(std::vector<bounding_box> &proposals,
   return keeped_bboxes;
 }
 
-}  // namespace tiny_dnn
+}

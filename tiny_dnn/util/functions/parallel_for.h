@@ -15,10 +15,7 @@
 #include <utility>
 #include <vector>
 
-#include "tiny_dnn/util/config/config.h"
-#include "tiny_dnn/util/types/types.h"
-#include "tiny_dnn/util/types/aligned_allocator.h"
-#include "tiny_dnn/util/nn_error.h"
+#include "tiny_dnn/util/error/nn_error.h"
 
 #ifdef CNN_USE_TBB
 #ifndef NOMINMAX

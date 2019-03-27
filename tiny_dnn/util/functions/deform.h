@@ -7,14 +7,16 @@
 */
 #pragma once
 
-#include "tiny_dnn/util/util.h"
+#include "tiny_dnn/util/types/types.h"
 
 namespace tiny_dnn {
 
-inline vec_t corrupt(vec_t &&in, float_t corruption_level, float_t min_value) {
-  for (size_t i                            = 0; i < in.size(); i++)
+inline vec_t corrupt(vec_t &&in, float_t corruption_level, float_t min_value) { 
+  
+  for (size_t i = 0; i < in.size(); i++) {
     if (bernoulli(corruption_level)) in[i] = min_value;
+  }
   return in;
 }
 
-}  // namespace tiny_dnn
+}

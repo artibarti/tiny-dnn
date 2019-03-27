@@ -18,7 +18,7 @@
 
 #include "tiny_dnn/layers/layers.h"
 #include "tiny_dnn/util/config/config.h"
-#include "tiny_dnn/util/nn_error.h"
+#include "tiny_dnn/util/error/nn_error.h"
 #include "tiny_dnn/util/serialization/serialization_functions.h"
 #include "tiny_dnn/util/serialization/serialization_layer_list.h"
 

@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-#include "tiny_dnn/util/util.h"
+#include "tiny_dnn/util/types/types.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -57,31 +57,21 @@ inline bool ends_with(std::string const &value, std::string const &ending) {
   return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
 
-inline void resize_image_core(const uint8_t *src,
-                              int srcw,
-                              int srch,
-                              uint8_t *dst,
-                              int dstw,
-                              int dsth,
-                              int channels) {
+inline void resize_image_core(const uint8_t *src, int srcw,
+  int srch, uint8_t *dst, int dstw, int dsth, int channels) {
   stbir_resize_uint8(src, srcw, srch, 0, dst, dstw, dsth, 0, channels);
 }
 
-inline void resize_image_core(const float *src,
-                              int srcw,
-                              int srch,
-                              float *dst,
-                              int dstw,
-                              int dsth,
-                              int channels) {
+inline void resize_image_core(const float *src, int srcw,
+  int srch, float *dst, int dstw, int dsth, int channels) {
   stbir_resize_float(src, srcw, srch, 0, dst, dstw, dsth, 0, channels);
 }
 
 }  // namespace detail
 
 enum class image_type {
-  grayscale,  ///< load image and convert automatically to 8-bit grayscale
-  rgb,        ///< load image and keep original color channels
+  grayscale, // load image and convert automatically to 8-bit grayscale
+  rgb,       // load image and keep original color channels
   bgr
 };
 
@@ -90,6 +80,7 @@ enum class image_type {
  */
 template <typename T = unsigned char>
 class image {
+ 
  public:
   typedef T intensity_t;
   typedef typename std::vector<intensity_t>::iterator iterator;
@@ -97,43 +88,31 @@ class image {
 
   image() : width_(0), height_(0), depth_(1) {}
 
-  /**
-   * create image from raw pointer
-   */
   image(const T *data, size_t width, size_t height, image_type type)
-    : width_(width),
-      height_(height),
-      depth_(type == image_type::grayscale ? 1 : 3),
-      type_(type),
-      data_(depth_ * width_ * height_, 0) {
-    std::copy(data, data + width * height * depth_, &data_[0]);
+    : width_(width), height_(height), depth_(type == image_type::grayscale ? 1 : 3),
+      type_(type), data_(depth_ * width_ * height_, 0) {
+      
+      std::copy(data, data + width * height * depth_, &data_[0]);
   }
 
-  /**
-   * create WxHxD image filled with 0
-   */
   image(const shape3d &size, image_type type)
-    : width_(size.width_),
-      height_(size.height_),
-      depth_(size.depth_),
-      type_(type),
-      data_(depth_ * width_ * height_, 0) {
-    if (type == image_type::grayscale && size.depth_ != 1) {
-      throw nn_error("depth must be 1 in grayscale");
-    } else if (type != image_type::grayscale && size.depth_ != 3) {
-      throw nn_error("depth must be 3 in rgb/bgr");
-    }
+    : width_(size.width_), height_(size.height_),
+      depth_(size.depth_), type_(type), data_(depth_ * width_ * height_, 0) {
+    
+      if (type == image_type::grayscale && size.depth_ != 1) {
+        throw nn_error("depth must be 1 in grayscale");
+      } else if (type != image_type::grayscale && size.depth_ != 3) {
+        throw nn_error("depth must be 3 in rgb/bgr");
+      }
   }
 
   template <typename U>
   image(const image<U> &rhs)
-    : width_(rhs.width()),
-      height_(rhs.height()),
-      depth_(rhs.depth()),
-      type_(rhs.type()),
-      data_(rhs.shape().size()) {
-    std::transform(rhs.begin(), rhs.end(), data_.begin(),
-                   [](T src) { return static_cast<intensity_t>(src); });
+    : width_(rhs.width()), height_(rhs.height()),
+      depth_(rhs.depth()), type_(rhs.type()), data_(rhs.shape().size()) {
+    
+      std::transform(rhs.begin(), rhs.end(), data_.begin(),
+        [](T src) { return static_cast<intensity_t>(src); });
   }
 
   /**

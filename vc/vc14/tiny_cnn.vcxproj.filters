@@ -198,7 +198,7 @@
     <ClInclude Include="..\..\tiny_dnn\util\types\aligned_allocator.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tiny_dnn\util\deform.h">
+    <ClInclude Include="..\..\tiny_dnn\util\functions\deform.h">
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tiny_dnn\util\graph_visualizer.h">
@@ -216,7 +216,7 @@
     <ClInclude Include="..\..\tiny_dnn\util\product.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tiny_dnn\util\nn_error.h">
+    <ClInclude Include="..\..\tiny_dnn\util\error\nn_error.h">
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tiny_dnn\layers\linear_layer.h">

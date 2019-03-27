@@ -75,12 +75,12 @@
     <ClInclude Include="..\..\tiny_dnn\models\alexnet.h" />
     <ClInclude Include="..\..\tiny_dnn\optimizers\optimizer.h" />
     <ClInclude Include="..\..\tiny_dnn\util\conv_kernel.h" />
-    <ClInclude Include="..\..\tiny_dnn\util\deform.h" />
+    <ClInclude Include="..\..\tiny_dnn\util\functions\deform.h" />
     <ClInclude Include="..\..\tiny_dnn\util\graph_visualizer.h" />
     <ClInclude Include="..\..\tiny_dnn\util\weight_init.h" />
     <ClInclude Include="..\..\tiny_dnn\util\image.h" />
     <ClInclude Include="..\..\tiny_dnn\util\product.h" />
-    <ClInclude Include="..\..\tiny_dnn\util\nn_error.h" />
+    <ClInclude Include="..\..\tiny_dnn\util\error\nn_error.h" />
     <ClInclude Include="..\..\tiny_dnn\util\util.h" />
     <ClInclude Include="..\..\tiny_dnn\util\types\aligned_allocator.h" />
     <ClInclude Include="..\..\tiny_dnn\util\target_cost.h" />

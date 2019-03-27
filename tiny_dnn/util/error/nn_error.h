@@ -9,14 +9,12 @@
 
 #include <exception>
 #include <string>
-#include "tiny_dnn/util/colored_print.h"
+#include "tiny_dnn/util/error/colored_print.h"
 
 namespace tiny_dnn {
 
-/**
- * error exception class for tiny-dnn
- **/
 class nn_error : public std::exception {
+ 
  public:
   explicit nn_error(const std::string &msg) : msg_(msg) {}
   const char *what() const throw() override { return msg_.c_str(); }
@@ -25,10 +23,8 @@ class nn_error : public std::exception {
   std::string msg_;
 };
 
-/**
- * warning class for tiny-dnn (for debug)
- **/
 class nn_warn {
+ 
  public:
   explicit nn_warn(const std::string &msg) : msg_(msg) {
     coloredPrint(Color::YELLOW, msg_h_ + msg_);
@@ -39,10 +35,8 @@ class nn_warn {
   std::string msg_h_ = std::string("[WARNING] ");
 };
 
-/**
- * info class for tiny-dnn (for debug)
- **/
 class nn_info {
+ 
  public:
   explicit nn_info(const std::string &msg) : msg_(msg) {
     std::cout << msg_h + msg_ << std::endl;
@@ -55,8 +49,7 @@ class nn_info {
 
 class nn_not_implemented_error : public nn_error {
  public:
-  explicit nn_not_implemented_error(const std::string &msg = "not implemented")
-    : nn_error(msg) {}
+  explicit nn_not_implemented_error(const std::string &msg = "not implemented") : nn_error(msg) {}
 };
 
-}  // namespace tiny_dnn
+}

@@ -9,6 +9,7 @@
 
 #include "tiny_dnn/util/config/config.h"
 #include "tiny_dnn/util/types/types.h"
+
 #include "tiny_dnn/network/network.h"
 #include "tiny_dnn/network/nodes.h"
 
@@ -55,11 +56,10 @@
 #include "tiny_dnn/lossfunctions/loss_function.h"
 #include "tiny_dnn/optimizers/optimizer.h"
 
-#include "tiny_dnn/util/deform.h"
+#include "tiny_dnn/util/functions/functions.h"
 #include "tiny_dnn/util/graph_visualizer.h"
 #include "tiny_dnn/util/product.h"
 #include "tiny_dnn/util/weight_init.h"
-#include "tiny_dnn/util/nms.h"
 
 #include "tiny_dnn/io/cifar10_parser.h"
 #include "tiny_dnn/io/display.h"

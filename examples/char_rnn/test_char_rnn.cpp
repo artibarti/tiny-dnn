@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "tiny_dnn/tiny_dnn.h"
-#include "tiny_dnn/util/random.h"
+#include "tiny_dnn/util/functions/functions.h"
 
 // Data helpers
 std::vector<tiny_dnn::tensor_t> encode(char &input, std::map<char, int> &dict) {

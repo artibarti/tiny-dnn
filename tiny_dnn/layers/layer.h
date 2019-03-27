@@ -22,7 +22,7 @@
 #include "tiny_dnn/core/backend.h"
 #include "tiny_dnn/network/node.h"
 
-#include "tiny_dnn/util/parallel_for.h"
+#include "tiny_dnn/util/functions/functions.h"
 #include "tiny_dnn/util/product.h"
 #include "tiny_dnn/util/util.h"
 #include "tiny_dnn/util/weight_init.h"
