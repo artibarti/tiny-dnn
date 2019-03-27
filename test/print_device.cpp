@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
   const int platform_id = atoi(argv[1]);
   const int device_id   = atoi(argv[2]);
 
-  printAvailableDevice(platform_id, device_id);
+  printAvailableDevices(platform_id, device_id);
 #else
   CNN_UNREFERENCED_PARAMETER(argc);
   CNN_UNREFERENCED_PARAMETER(argv);
