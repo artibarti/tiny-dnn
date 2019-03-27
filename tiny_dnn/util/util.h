@@ -44,17 +44,9 @@
 
 namespace tiny_dnn {
 
-enum class net_phase { train, test };
-
-enum class padding {
-  valid,  ///< use valid pixels of input
-  same    ///< add zero-padding around input so as to keep image size
-};
-
 template <typename T>
 T *reverse_endian(T *p) {
-  std::reverse(reinterpret_cast<char *>(p),
-               reinterpret_cast<char *>(p) + sizeof(T));
+  std::reverse(reinterpret_cast<char *>(p), reinterpret_cast<char *>(p) + sizeof(T));
   return p;
 }
 
@@ -76,30 +68,30 @@ U rescale(T x, T src_min, T src_max, U dst_min, U dst_max) {
   return std::min(dst_max, std::max(value, dst_min));
 }
 
-inline void nop() {
-  // do nothing
-}
+inline void nop() {}
 
 template <typename T>
 inline T sqr(T value) {
   return value * value;
 }
 
-inline bool isfinite(float_t x) { return x == x; }
+inline bool isfinite(float_t x) {
+  return x == x;
+}
 
 template <typename Container>
 inline bool has_infinite(const Container &c) {
   for (auto v : c)
-    if (!isfinite(v)) return true;
+    if (!isfinite(v))
+      return true;
   return false;
 }
 
 template <typename Container>
 size_t max_size(const Container &c) {
   typedef typename Container::value_type value_t;
-  const auto max_size =
-    std::max_element(c.begin(), c.end(), [](const value_t &left,
-                                            const value_t &right) {
+  const auto max_size = std::max_element(c.begin(), c.end(),
+    [](const value_t &left, const value_t &right) {
       return left.size() < right.size();
     })->size();
   assert(max_size <= std::numeric_limits<size_t>::max());
@@ -107,24 +99,31 @@ size_t max_size(const Container &c) {
 }
 
 inline std::string format_str(const char *fmt, ...) {
+  
   static char buf[2048];
 
-#ifdef _MSC_VER
-#pragma warning(disable : 4996)
-#endif
+  #ifdef _MSC_VER
+    #pragma warning(disable : 4996)
+  #endif
+  
   va_list args;
   va_start(args, fmt);
   vsnprintf(buf, sizeof(buf), fmt, args);
   va_end(args);
-#ifdef _MSC_VER
-#pragma warning(default : 4996)
-#endif
+
+  #ifdef _MSC_VER
+    #pragma warning(default : 4996)
+  #endif
+  
   return std::string(buf);
 }
 
 template <typename T>
 struct index3d {
-  index3d(T width, T height, T depth) { reshape(width, height, depth); }
+  
+  index3d(T width, T height, T depth) {
+    reshape(width, height, depth);
+  }
 
   index3d() : width_(0), height_(0), depth_(0) {}
 
@@ -137,8 +136,8 @@ struct index3d {
       throw nn_error(format_str(
         "error while constructing layer: layer size too large for "
         "tiny-dnn\nWidthxHeightxChannels=%dx%dx%d >= max size of "
-        "[%s](=%d)",
-        width, height, depth, typeid(T).name(), std::numeric_limits<T>::max()));
+        "[%s](=%d)", width, height, depth, typeid(T).name(),
+        std::numeric_limits<T>::max()));
   }
 
   T get_index(T x, T y, T channel) const {
@@ -148,9 +147,13 @@ struct index3d {
     return (height_ * channel + y) * width_ + x;
   }
 
-  T area() const { return width_ * height_; }
+  T area() const {
+    return width_ * height_;
+  }
 
-  T size() const { return width_ * height_ * depth_; }
+  T size() const {
+    return width_ * height_ * depth_;
+  }
 
   T width_;
   T height_;
@@ -161,8 +164,8 @@ typedef index3d<size_t> shape3d;
 
 template <typename T>
 bool operator==(const index3d<T> &lhs, const index3d<T> &rhs) {
-  return (lhs.width_ == rhs.width_) && (lhs.height_ == rhs.height_) &&
-         (lhs.depth_ == rhs.depth_);
+  return (lhs.width_ == rhs.width_) && (lhs.height_ == rhs.height_)
+    && (lhs.depth_ == rhs.depth_);
 }
 
 template <typename T>
@@ -200,24 +203,6 @@ std::string to_string(T value) {
   os << value;
   return os.str();
 }
-
-#define CNN_LOG_VECTOR(vec, name)
-/*
-void CNN_LOG_VECTOR(const vec_t& vec, const std::string& name) {
-    std::cout << name << ",";
-
-    if (vec.empty()) {
-        std::cout << "(empty)" << std::endl;
-    }
-    else {
-        for (size_t i = 0; i < vec.size(); i++) {
-            std::cout << vec[i] << ",";
-        }
-    }
-
-    std::cout << std::endl;
-}
-*/
 
 template <typename T, typename Pred, typename Sum>
 size_t sumif(const std::vector<T> &vec, Pred p, Sum s) {
@@ -302,13 +287,10 @@ inline void fill_tensor(tensor_t &tensor, float_t value, size_t size) {
   }
 }
 
-inline size_t conv_out_length(size_t in_length,
-                              size_t window_size,
-                              size_t stride,
-                              size_t dilation,
-                              padding pad_type) {
+inline size_t conv_out_length(size_t in_length, size_t window_size,
+  size_t stride, size_t dilation, padding pad_type) {
+  
   size_t output_length;
-
   if (pad_type == padding::same) {
     output_length = in_length;
   } else if (pad_type == padding::valid) {
@@ -319,11 +301,9 @@ inline size_t conv_out_length(size_t in_length,
   return (output_length + stride - 1) / stride;
 }
 
-inline size_t pool_out_length(size_t in_length,
-                              size_t window_size,
-                              size_t stride,
-                              bool ceil_mode,
-                              padding pad_type) {
+inline size_t pool_out_length(size_t in_length, size_t window_size,
+  size_t stride, bool ceil_mode, padding pad_type) {
+  
   size_t output_length;
 
   if (pad_type == padding::same) {
@@ -343,7 +323,6 @@ std::unique_ptr<T> make_unique(Args &&... args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
-// check for value type being some particular type
 template <class ValType, class T>
 using value_type_is = std::enable_if_t<std::is_same<T, typename ValType::value_type>::value>;
 
