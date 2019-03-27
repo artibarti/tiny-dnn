@@ -15,7 +15,6 @@ namespace tiny_dnn {
 // to size_t, because size of last layer is equal to number of classes
 typedef size_t label_t;
 
-typedef size_t layer_size_t;  // for backward compatibility
 typedef std::vector<float_t, aligned_allocator<float_t, 64>> vec_t;
 typedef std::vector<vec_t> tensor_t;
 

@@ -92,7 +92,7 @@ inline std::shared_ptr<weight_init::function> create_filler(
 }
 
 template <typename param>
-inline bool get_kernel_size_2d(const param &p, layer_size_t *kernel) {
+inline bool get_kernel_size_2d(const param &p, label_t *kernel) {
   if (p.has_kernel_w() && p.has_kernel_h()) {
     if (p.kernel_w() != p.kernel_h()) {
       throw nn_error("unsupported kernel shape");
@@ -105,8 +105,8 @@ inline bool get_kernel_size_2d(const param &p, layer_size_t *kernel) {
 
 template <typename param>
 inline bool get_kernel_size_2d(const param &p,
-                               layer_size_t *kernel_w,
-                               layer_size_t *kernel_h) {
+                               label_t *kernel_w,
+                               label_t *kernel_h) {
   if (p.has_kernel_w() && p.has_kernel_h()) {
     *kernel_w = p.kernel_w();
     *kernel_h = p.kernel_h();
@@ -115,8 +115,8 @@ inline bool get_kernel_size_2d(const param &p,
   return false;
 }
 
-inline layer_size_t get_kernel_size_2d(const caffe::ConvolutionParameter &p) {
-  layer_size_t window_size;
+inline label_t get_kernel_size_2d(const caffe::ConvolutionParameter &p) {
+  label_t window_size;
   if (!get_kernel_size_2d(p, &window_size)) {
     if (p.kernel_size_size() > 1) {
       throw nn_error("unsupported kernel shape");
@@ -126,10 +126,10 @@ inline layer_size_t get_kernel_size_2d(const caffe::ConvolutionParameter &p) {
   return window_size;
 }
 
-inline std::shared_ptr<layer> create_max_pool(layer_size_t pool_size_w,
-                                              layer_size_t pool_size_h,
-                                              layer_size_t stride_w,
-                                              layer_size_t stride_h,
+inline std::shared_ptr<layer> create_max_pool(label_t pool_size_w,
+                                              label_t pool_size_h,
+                                              label_t stride_w,
+                                              label_t stride_h,
                                               bool ceil_mode,
                                               padding pad_type,
                                               const shape_t &bottom_shape,
@@ -145,10 +145,10 @@ inline std::shared_ptr<layer> create_max_pool(layer_size_t pool_size_w,
   return mp;
 }
 
-inline std::shared_ptr<layer> create_ave_pool(layer_size_t pool_size_w,
-                                              layer_size_t pool_size_h,
-                                              layer_size_t stride_w,
-                                              layer_size_t stride_h,
+inline std::shared_ptr<layer> create_ave_pool(label_t pool_size_w,
+                                              label_t pool_size_h,
+                                              label_t stride_w,
+                                              label_t stride_h,
                                               bool ceil_mode,
                                               padding pad_type,
                                               const shape_t &bottom_shape,
@@ -213,12 +213,12 @@ inline std::shared_ptr<layer> create_pooling(const caffe::LayerParameter &layer,
 
   auto pool_param = layer.pooling_param();
 
-  layer_size_t h_stride    = 0;
-  layer_size_t w_stride    = 0;
-  layer_size_t pool_size_w = 0;
-  layer_size_t pool_size_h = 0;
-  layer_size_t h_pad       = 0;
-  layer_size_t w_pad       = 0;
+  label_t h_stride    = 0;
+  label_t w_stride    = 0;
+  label_t pool_size_w = 0;
+  label_t pool_size_h = 0;
+  label_t h_pad       = 0;
+  label_t w_pad       = 0;
   bool ceil_mode           = false;
   padding pad_type         = padding::valid;
 
@@ -397,7 +397,7 @@ inline std::shared_ptr<layer> create_fullyconnected(
     throw nn_error("inner-product param missing");
   }
 
-  layer_size_t dim_input = 0, dim_output = 0;
+  label_t dim_input = 0, dim_output = 0;
   bool has_bias = true;
 
   auto ip_param = layer.inner_product_param();
@@ -512,7 +512,7 @@ inline void load_weights_pool(const caffe::LayerParameter &src, layer *dst) {
   auto pool_param = src.pooling_param();
 
   if (dst->weights().size()) {
-    layer_size_t pool_size = 0;
+    label_t pool_size = 0;
 
     if (!get_kernel_size_2d(pool_param, &pool_size)) {
       pool_size = pool_param.kernel_size();
@@ -551,7 +551,7 @@ inline std::shared_ptr<layer> create_lrn(const caffe::LayerParameter &layer,
   }
 
   auto lrn_param          = layer.lrn_param();
-  layer_size_t local_size = 5;
+  label_t local_size = 5;
   float_t alpha           = 1;
   float_t beta            = 5;
   norm_region region      = norm_region::across_channels;
@@ -600,9 +600,9 @@ inline std::shared_ptr<layer> create_convlayer(
   }
 
   // layer parameters
-  layer_size_t in_width = 0, in_height = 0, window_size = 0;
-  layer_size_t in_channels = 0, out_channels = 0;
-  layer_size_t w_stride = 1, h_stride = 1;
+  label_t in_width = 0, in_height = 0, window_size = 0;
+  label_t in_channels = 0, out_channels = 0;
+  label_t w_stride = 1, h_stride = 1;
   bool has_bias    = true;
   padding pad_type = padding::valid;
   core::connection_table table;
@@ -689,9 +689,9 @@ inline std::shared_ptr<layer> create_deconvlayer(
   }
 
   // layer parameters
-  layer_size_t in_width = 0, in_height = 0, window_size = 0;
-  layer_size_t in_channels = 0, out_channels = 0;
-  layer_size_t w_stride = 1, h_stride = 1;
+  label_t in_width = 0, in_height = 0, window_size = 0;
+  label_t in_channels = 0, out_channels = 0;
+  label_t w_stride = 1, h_stride = 1;
   bool has_bias    = true;
   padding pad_type = padding::valid;
   core::connection_table table;
