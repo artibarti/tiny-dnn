@@ -24,7 +24,8 @@
 #include "tiny_dnn/xtensor/xarray.hpp"
 #include "tiny_dnn/xtensor/xview.hpp"
 
-#include "tiny_dnn/config/config.h"
+#include "tiny_dnn/util/config/config.h"
+#include "tiny_dnn/util/types/types.h"
 
 #ifndef CNN_NO_SERIALIZATION
 #include <cereal/archives/binary.hpp>
@@ -53,17 +54,6 @@
 #endif
 
 namespace tiny_dnn {
-
-///< output label(class-index) for classification
-///< must be equal to size_t, because size of last layer is equal to num.
-/// of classes
-typedef size_t label_t;
-
-typedef size_t layer_size_t;  // for backward compatibility
-
-typedef std::vector<float_t, aligned_allocator<float_t, 64>> vec_t;
-
-typedef std::vector<vec_t> tensor_t;
 
 template <typename T>
 using xtensor_t = xt::xexpression<T>;

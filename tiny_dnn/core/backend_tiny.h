@@ -9,7 +9,8 @@
 
 #include <vector>
 
-#include "tiny_dnn/config/config.h"
+#include "tiny_dnn/util/config/config.h"
+#include "tiny_dnn/util/types/types.h"
 #include "tiny_dnn/core/backend.h"
 
 #include "tiny_dnn/core/kernels/tiny_deconv2d_back_kernel.h"

@@ -11,7 +11,8 @@
 #include <random>
 #include <type_traits>
 
-#include "tiny_dnn/config/config.h"
+#include "tiny_dnn/util/config/config.h"
+#include "tiny_dnn/util/types/types.h"
 #include "tiny_dnn/util/nn_error.h"
 
 namespace tiny_dnn {
