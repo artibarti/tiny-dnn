@@ -8,8 +8,11 @@
 #pragma once
 
 #include <vector>
+#include <cassert>
+#include <cmath>
 
-#include "tiny_dnn/util/util.h"
+// #include "tiny_dnn/util/util.h"
+#include "tiny_dnn/util/types/types.h"
 
 namespace tiny_dnn {
 

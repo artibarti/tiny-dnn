@@ -10,6 +10,8 @@
 #include <string>
 #include <cstddef>
 #include <cstdint>
+#include <stdarg.h>
+#include <cassert>
 
 #ifdef CNN_WINDOWS
   #ifndef NOMINMAX

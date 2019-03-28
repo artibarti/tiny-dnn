@@ -207,13 +207,13 @@
     <ClInclude Include="..\..\tiny_dnn\util\image.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tiny_dnn\util\weight_init.h">
+    <ClInclude Include="..\..\tiny_dnn\util\functions\weight_init.h">
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tiny_dnn\util\target_cost.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tiny_dnn\util\product.h">
+    <ClInclude Include="..\..\tiny_dnn\util\functions\product.h">
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tiny_dnn\util\error\nn_error.h">

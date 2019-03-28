@@ -74,8 +74,7 @@ class conv_params : public Params {
   size_t w_dilation;
   size_t h_dilation;
 
-  friend std::ostream &operator<<(std::ostream &o,
-                                  const core::conv_params &param) {
+  friend std::ostream &operator<<(std::ostream &o, const core::conv_params &param) {
     o << "in:        " << param.in << "\n";
     o << "out:       " << param.out << "\n";
     o << "in_padded: " << param.in_padded << "\n";

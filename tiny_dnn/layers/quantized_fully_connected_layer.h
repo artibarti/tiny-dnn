@@ -13,7 +13,6 @@
 #include <vector>
 
 #include "tiny_dnn/layers/layer.h"
-#include "tiny_dnn/util/product.h"
 
 namespace tiny_dnn {
 

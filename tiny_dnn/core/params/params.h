@@ -7,6 +7,9 @@
 */
 #pragma once
 
+#include "tiny_dnn/util/error/nn_error.h"
+#include "tiny_dnn/util/functions/functions.h"
+
 namespace tiny_dnn {
 namespace core {
 
