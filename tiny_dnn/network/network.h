@@ -23,7 +23,7 @@
 #include <utility>
 #include <vector>
 
-#include "tiny_dnn/lossfunctions/loss_function.h"
+#include "tiny_dnn/util/functions/functions.h"
 #include "tiny_dnn/network/nodes.h"
 #include "tiny_dnn/util/util.h"
 

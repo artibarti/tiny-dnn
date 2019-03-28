@@ -55,7 +55,6 @@
 #include "tiny_dnn/layers/quantized_fully_connected_layer.h"
 #endif
 
-#include "tiny_dnn/lossfunctions/loss_function.h"
 #include "tiny_dnn/optimizers/optimizer.h"
 
 #include "tiny_dnn/util/functions/functions.h"

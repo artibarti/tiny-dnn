@@ -186,7 +186,7 @@
     <ClInclude Include="..\..\tiny_dnn\layers\partial_connected_layer.h">
       <Filter>layers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tiny_dnn\lossfunctions\loss_function.h">
+    <ClInclude Include="..\..\tiny_dnn\util\functions\lossfunctions\loss_function.h">
       <Filter>lossfunctions</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tiny_dnn\models\alexnet.h">
@@ -210,7 +210,7 @@
     <ClInclude Include="..\..\tiny_dnn\util\functions\weight_init.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tiny_dnn\util\target_cost.h">
+    <ClInclude Include="..\..\tiny_dnn\util\functions\target_cost.h">
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tiny_dnn\util\functions\product.h">

@@ -71,7 +71,7 @@
     <ClInclude Include="..\..\tiny_dnn\layers\quantized_deconvolutional_layer.h" />
     <ClInclude Include="..\..\tiny_dnn\layers\quantized_fully_connected_layer.h" />
     <ClInclude Include="..\..\tiny_dnn\layers\slice_layer.h" />
-    <ClInclude Include="..\..\tiny_dnn\lossfunctions\loss_function.h" />
+    <ClInclude Include="..\..\tiny_dnn\util\functions\lossfunctions\loss_function.h" />
     <ClInclude Include="..\..\tiny_dnn\models\alexnet.h" />
     <ClInclude Include="..\..\tiny_dnn\optimizers\optimizer.h" />
     <ClInclude Include="..\..\tiny_dnn\util\conv_kernel.h" />
@@ -83,7 +83,7 @@
     <ClInclude Include="..\..\tiny_dnn\util\error\nn_error.h" />
     <ClInclude Include="..\..\tiny_dnn\util\util.h" />
     <ClInclude Include="..\..\tiny_dnn\util\types\aligned_allocator.h" />
-    <ClInclude Include="..\..\tiny_dnn\util\target_cost.h" />
+    <ClInclude Include="..\..\tiny_dnn\util\functions\target_cost.h" />
     <ClInclude Include="..\..\tiny_dnn\io\mnist_parser.h" />
     <ClInclude Include="..\..\tiny_dnn\io\cifar10_parser.h" />
     <ClInclude Include="..\..\tiny_dnn\layers\arithmetic_layer.h" />

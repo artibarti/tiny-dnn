@@ -270,7 +270,7 @@ void sample4_dropout(const string& data_dir) {
   // std::cout << res.num_success << "/" << res.num_total << std::endl;
 }
 
-#include "tiny_dnn/util/target_cost.h"
+#include "tiny_dnn/util/functions/target_cost.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // learning unbalanced training data

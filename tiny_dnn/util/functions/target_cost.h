@@ -7,10 +7,12 @@
 */
 #pragma once
 
-#include <numeric>  // std::accumulate
+#include <numeric>
 #include <vector>
+#include <cassert>
 
-#include "tiny_dnn/util/util.h"
+#include "tiny_dnn/util/types/types.h"
+#include "tiny_dnn/util/functions/product.h"
 
 namespace tiny_dnn {
 

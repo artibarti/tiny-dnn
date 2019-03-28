@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "tiny_dnn/util/target_cost.h"
+#include "tiny_dnn/util/functions/target_cost.h"
 
 namespace tiny_dnn {
 
