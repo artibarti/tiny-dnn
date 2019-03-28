@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "tiny_dnn/util/types/aligned_allocator.h"
+#include "tiny_dnn/containers/containers.h"
 
 namespace tiny_dnn {
 
@@ -13,9 +14,10 @@ namespace tiny_dnn {
 
 // output label(class-index) for classification must be equal
 // to size_t, because size of last layer is equal to number of classes
-typedef size_t label_t;
-typedef std::vector<float_t, aligned_allocator<float_t, 64>> vec_t;
-typedef std::vector<vec_t> tensor_t;
+using label_t = size_t;
+using vec_t = std::vector<float_t, aligned_allocator<float_t, 64>>;
+using tensor_t = std::vector<vec_t>;
+using matrix_t = Matrix<float_t>;
 
 enum class net_phase { train, test };
 
@@ -23,6 +25,5 @@ enum class padding {
   valid,  ///< use valid pixels of input
   same    ///< add zero-padding around input so as to keep image size
 };
-
 
 }

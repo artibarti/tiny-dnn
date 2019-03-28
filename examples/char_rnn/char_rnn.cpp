@@ -13,7 +13,6 @@
 #include <vector>
 
 #include "tiny_dnn/tiny_dnn.h"
-#include "tiny_dnn/util/functions/functions.h"
 
 // Data helpers
 
