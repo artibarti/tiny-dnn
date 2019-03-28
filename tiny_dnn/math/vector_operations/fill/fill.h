@@ -12,16 +12,16 @@ namespace tiny_dnn {
   namespace math {
 
 	template<core::backend_t backend = core::backend_t::internal>
-	void fill(matrix_t& mat, const float_t& value = 0) {
+	void fill(tensor_t& mat, const float_t& value = 0) {
 
-			if (!isSupportedBackend(Operation::fill, backend)) {
-				throw nn_error("Backend type is not supported for this operation");
-			}
+		if (!isSupportedBackend(Operation::fill, backend)) {
+			throw nn_error("Backend type is not supported for this operation");
+		}
 
-			if (backend == core::backend_t::internal) {
-				fill_internal(mat, value);
-			}
+		if (backend == core::backend_t::internal) {
+			fill_internal(mat, value);
+		}
 	}
-  
+
 	}
 }

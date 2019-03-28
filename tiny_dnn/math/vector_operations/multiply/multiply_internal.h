@@ -5,8 +5,9 @@
 namespace tiny_dnn {
   namespace math {
 
-    void multiply_internal(const matrix_t& left, const matrix_t& right, matrix_t& result) {
+    void multiply_internal(const tensor_t& left, const tensor_t& right, tensor_t& result) {
 
+        /*
         for (unsigned row_left = 0; row_left < left.rowCount(); row_left++)
         {
             for (unsigned col_right = 0; col_right < right.colCount(); col_right++)
@@ -20,6 +21,7 @@ namespace tiny_dnn {
                 result[row_left * result.colCount() + col_right] = sum;
             }
         }
+        */
 
     }
 

@@ -9,16 +9,17 @@
 #include "tiny_dnn/math/vector_operations/add/add_internal.h"
 
 namespace tiny_dnn {
-  namespace math {
+ namespace math {
 
 	template<core::backend_t backend = core::backend_t::internal>
-	void add(const matrix_t& left, const matrix_t& right, matrix_t& result, 
+	void add(const tensor_t& left, const tensor_t& right, tensor_t& result, 
 		bool resizeResultIfNeeded = false) {
-
+			
 			if (!isSupportedBackend(Operation::add, backend)) {
 				throw nn_error("Backend type is not supported for this operation");
 			}
 
+			/*
 			if (!left.hasSameDimensionWith(right)) {
 				throw std::invalid_argument("Matrices are not compatible for this operation");
 			}
@@ -28,11 +29,12 @@ namespace tiny_dnn {
 			} else if (!left.hasSameDimensionWith(result) && resizeResultIfNeeded) {
 				result.resize(left.rowCount(), left.colCount());
 			}
+			*/
 
 			if (backend == core::backend_t::internal) {
 				add_internal(left, right, result);
 			}
 	}
-  
-  }
+
+ }
 }

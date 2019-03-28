@@ -12,13 +12,14 @@ namespace tiny_dnn {
   namespace math {
 
 	template<core::backend_t backend = core::backend_t::internal>
-	void multiply(const matrix_t& left, const matrix_t& right, matrix_t& result, 
+	void multiply(const tensor_t& left, const tensor_t& right, tensor_t& result, 
 		bool resizeResultIfNeeded = false) {
 
 			if (!isSupportedBackend(Operation::multiply, backend)) {
 				throw nn_error("Backend type is not supported for this operation");
 			}
 
+			/*
 			if (!left.isMultipliableWith(right)) {
 				throw std::invalid_argument("Matrices are not compatible for this operation");
 			}
@@ -31,7 +32,8 @@ namespace tiny_dnn {
 			} else if (resultSizeIsCorrect && resizeResultIfNeeded) {
 				result.resize(left.rowCount(), right.colCount());
 			}
-
+			*/
+			
 			if (backend == core::backend_t::internal) {
 				multiply_internal(left, right, result);
 			}
