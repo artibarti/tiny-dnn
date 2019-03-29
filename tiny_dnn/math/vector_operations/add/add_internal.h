@@ -7,11 +7,9 @@ namespace tiny_dnn {
 
     void add_internal(const tensor_t& left, const tensor_t& right, tensor_t& result) {
 
-        /*
-        for (unsigned i = 0; i < left.getElementCount(); i++) {
-            result[i] = left[i] + right[i];
-        }
-        */
+      for (unsigned i = 0; i < left.size(); i++)
+        for(unsigned j = 0; j < left[i].size(); j++)
+          result[i][j] = left[i][j] + right[i][j];
     }
 
   }

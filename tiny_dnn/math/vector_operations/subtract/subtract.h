@@ -18,18 +18,16 @@ namespace tiny_dnn {
 			if (!isSupportedBackend(Operation::subtract, backend)) {
 				throw nn_error("Backend type is not supported for this operation");
 			}
-
-			/*
-			if (!left.hasSameDimensionWith(right)) {
-				throw std::invalid_argument("Matrices are not compatible for this operation");
+			if (!haveSameDimensions(left, right)) {
+				throw std::invalid_argument("Tensors are not compatible for this operation");
 			}
-
-			if (!left.hasSameDimensionWith(result) && !resizeResultIfNeeded) {
-				throw std::invalid_argument("Matrices are not compatible for this operation");
-			} else if (!left.hasSameDimensionWith(result) && resizeResultIfNeeded) {
-				result.resize(left.rowCount(), left.colCount());
+			if (!haveSameDimensions(left, result)) {
+				if (!resizeResultIfNeeded) {
+					throw std::invalid_argument("Tensors are not compatible for this operation");
+				} else {
+					// TODO resize
+				}
 			}
-			*/
 
 			if (backend == core::backend_t::internal) {
 				subtract_internal(left, right, result);

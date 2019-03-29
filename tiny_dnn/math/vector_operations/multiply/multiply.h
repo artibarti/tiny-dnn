@@ -19,20 +19,23 @@ namespace tiny_dnn {
 				throw nn_error("Backend type is not supported for this operation");
 			}
 
-			/*
-			if (!left.isMultipliableWith(right)) {
-				throw std::invalid_argument("Matrices are not compatible for this operation");
-			}
+			shape2d left_shape = getDimension(left);
+			shape2d right_shape = getDimension(right);
+			shape2d result_shape = getDimension(result);
 
-      bool resultSizeIsCorrect = result.rowCount() != left.rowCount()
-          && result.colCount() != right.colCount();
-
-			if (resultSizeIsCorrect && !resizeResultIfNeeded) {
-				throw std::invalid_argument("Matrices are not compatible for this operation");
-			} else if (resultSizeIsCorrect && resizeResultIfNeeded) {
-				result.resize(left.rowCount(), right.colCount());
+			if (left_shape == 0 || right_shape == 0) {
+				throw std::invalid_argument("Operation is not supported for empty tensors");
 			}
-			*/
+			if (left_shape.y != right_shape.x) {
+				throw std::invalid_argument("Tensors are not compatible for this operation");
+			}
+			if (result_shape == 0 && resizeResultIfNeeded) {
+				// TODO resize
+			}
+			if (result_shape.x != left_shape.x && result_shape.y != right_shape.y
+				&& !resizeResultIfNeeded) {
+				throw std::invalid_argument("Tensors are not compatible for this operation");					
+			}      
 			
 			if (backend == core::backend_t::internal) {
 				multiply_internal(left, right, result);

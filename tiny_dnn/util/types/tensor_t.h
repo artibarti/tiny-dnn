@@ -11,28 +11,49 @@ namespace tiny_dnn {
 using vec_t = std::vector<float_t, aligned_allocator<float_t, 64>>;
 using tensor_t = std::vector<vec_t>;
 
-bool hasSameDimensions(vec_t& v1, vec_t& v2) {
-    return v1.size() == v2.size();
-}
+struct shape2d
+{
+    unsigned x, y;
 
-bool hasSameDimensions(tensor_t& t1, tensor_t& t2) {
-    if (t1.size() == t2.size()) {
-        if (t1.size() != 0) {
-            if (t1[0].size() == t2[0].size()) {
-                return true;
+    shape2d() : x(0), y(0) {}
+    shape2d(unsigned _x, unsigned _y) : x(_x), y(_y) {}
+            
+    bool operator==(const shape2d& other) {
+        return (x == other.x && y == other.y);
+    }    
+    bool operator!=(const shape2d& other) {
+        return !(x == other.x && y == other.y);
+    }
+    bool operator==(unsigned size) {
+        return (x == size && y == size);
+    }    
+
+    unsigned operator[] (unsigned index) {
+        if (index == 0) {
+            return x;
+        } else if (index == 1) {
+            return y;
+        } else {
+            throw std::out_of_range("Index out of bounds");
+        }
+    }
+};
+
+shape2d getDimension(const tensor_t& tensor) {
+    if (tensor.size() != 0) {
+        unsigned cols = tensor[0].size();
+        for (unsigned i = 1; i < tensor.size(); i++) {
+            if (tensor[i].size() != cols) {
+                throw std::runtime_error("Tensor is not a valid matrix");
             }
         }
+        return shape2d(tensor.size(), cols);
     }
-    return false;
+    return shape2d(0,0);
 }
 
-bool isMultiplicable(tensor_t& t1, tensor_t& t2) {
-    if (t1.size() != 0 && t2.size() != 0) {
-        if (t1[0].size() == t2.size()) {
-            return true;
-        }
-    }
-    return false;
+bool haveSameDimensions(const tensor_t& t1, const tensor_t& t2) {
+    return getDimension(t1) == getDimension(t2);
 }
 
 }

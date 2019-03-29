@@ -9,17 +9,17 @@
 #include "tiny_dnn/math/vector_operations/fill/fill_internal.h"
 
 namespace tiny_dnn {
-  namespace math {
+	namespace math {
 
 	template<core::backend_t backend = core::backend_t::internal>
-	void fill(tensor_t& mat, const float_t& value = 0) {
-
+	void fill(tensor_t& tensor, const float_t& value) {
+		
 		if (!isSupportedBackend(Operation::fill, backend)) {
 			throw nn_error("Backend type is not supported for this operation");
 		}
 
 		if (backend == core::backend_t::internal) {
-			fill_internal(mat, value);
+			fill_internal(tensor, value);
 		}
 	}
 

@@ -4,10 +4,12 @@
 #include <algorithm>
 #include <vector>
 
+#include "tiny_dnn/core/backend.h"
+
 namespace tiny_dnn {
   namespace math {
 
-    enum class Operation {add, subtract, multiply, divide, fill};
+    enum class Operation { add, subtract, multiply, fill };
 
     std::vector<core::backend_t> supportedBackendsForAdd = {
         core::backend_t::internal
@@ -25,21 +27,21 @@ namespace tiny_dnn {
         core::backend_t::internal
     };
 
-	bool isSupportedBackend(Operation o, core::backend_t backend) {
+	bool isSupportedBackend(Operation operation, core::backend_t backend) {
 
-        if (o == Operation::add)
+        if (operation == Operation::add)
             return std::find(supportedBackendsForAdd.begin(), supportedBackendsForAdd.end(),
                 backend) != supportedBackendsForAdd.end();
         
-        else if (o == Operation::subtract)
+        else if (operation == Operation::subtract)
             return std::find(supportedBackendsForSubtract.begin(), supportedBackendsForSubtract.end(),
                 backend) != supportedBackendsForSubtract.end();
         
-        else if (o == Operation::multiply)
+        else if (operation == Operation::multiply)
             return std::find(supportedBackendsForMultiply.begin(), supportedBackendsForMultiply.end(),
                 backend) != supportedBackendsForMultiply.end();
 
-        else if (o == Operation::fill)
+        else if (operation == Operation::fill)
             return std::find(supportedBackendsForFill.begin(), supportedBackendsForFill.end(),
                 backend) != supportedBackendsForFill.end();
         else 

@@ -7,21 +7,21 @@ namespace tiny_dnn {
 
     void multiply_internal(const tensor_t& left, const tensor_t& right, tensor_t& result) {
 
-        /*
-        for (unsigned row_left = 0; row_left < left.rowCount(); row_left++)
+        shape2d leftDim = getDimension(left);
+        shape2d rightDim = getDimension(right);
+
+        for (unsigned row_left = 0; row_left < leftDim.x; row_left++)
         {
-            for (unsigned col_right = 0; col_right < right.colCount(); col_right++)
+            for (unsigned col_right = 0; col_right < rightDim.y; col_right++)
             {
                 float_t sum = 0;
-                for (unsigned i = 0; i < left.colCount(); i++)
+                for (unsigned i = 0; i < leftDim.y; i++)
                 {
-                    sum += left[row_left * left.colCount() + i] 
-                        * right[i * right.colCount() + col_right];
+                    sum += left[row_left][i] * right[i][col_right];
                 }
-                result[row_left * result.colCount() + col_right] = sum;
+                result[row_left][col_right] = sum;
             }
         }
-        */
 
     }
 
