@@ -9,8 +9,7 @@
 
 #include <functional>
 #include <vector>
-
-#include "tiny_dnn/util/gradient_check.h"
+#include "test/gradient_check/gradient_check.h"
 
 namespace tiny_dnn {
 

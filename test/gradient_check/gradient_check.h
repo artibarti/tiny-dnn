@@ -47,13 +47,10 @@ std::vector<tensor_t *> tensor2ptr(std::vector<tensor_t> &input) {
  *perturbation.
  * @return The numeric gradient for the desired position and matrix.
 **/
-float_t numeric_gradient(layer &layer,
-                         std::vector<tensor_t> in_data,  //  copy is safer
-                         const size_t in_edge,
-                         const size_t in_pos,
-                         std::vector<tensor_t> out_data,
-                         const size_t out_edge,
-                         const size_t out_pos) {
+float_t numeric_gradient(layer &layer, std::vector<tensor_t> in_data,
+  const size_t in_edge, const size_t in_pos, std::vector<tensor_t> out_data,
+  const size_t out_edge, const size_t out_pos) {
+  
   // sqrt(machine epsilon) is assumed to be safe
   float_t h = std::sqrt(std::numeric_limits<float_t>::epsilon());
   // initialize input/output
@@ -87,14 +84,10 @@ float_t numeric_gradient(layer &layer,
  * @param out_pos Output position to put the gradient to 1.
  * @return The computed gradient for the desired position and matrix.
  */
-float_t analytical_gradient(layer &layer,
-                            std::vector<tensor_t> in_data,
-                            const size_t in_edge,
-                            const size_t in_pos,
-                            std::vector<tensor_t> out_data,
-                            std::vector<tensor_t> out_grads,
-                            const size_t out_edge,
-                            const size_t out_pos) {
+float_t analytical_gradient(layer &layer, std::vector<tensor_t> in_data,
+  const size_t in_edge, const size_t in_pos, std::vector<tensor_t> out_data,
+  std::vector<tensor_t> out_grads, const size_t out_edge, const size_t out_pos) {
+  
   // initialize input/output
   std::vector<tensor_t *> in_data_  = tensor2ptr(in_data);
   std::vector<tensor_t> in_grads    = in_data;  // copy constructor
@@ -119,8 +112,7 @@ float_t analytical_gradient(layer &layer,
  * @param numeric_gradient
  * @return the relative error.
  */
-float_t relative_error(const float_t analytical_grad,
-                       const float_t numeric_grad) {
+float_t relative_error(const float_t analytical_grad, const float_t numeric_grad) {
   float_t max = std::max(std::abs(analytical_grad), std::abs(numeric_grad));
   return (max == 0) ? 0.0 : std::abs(analytical_grad - numeric_grad) / max;
 }

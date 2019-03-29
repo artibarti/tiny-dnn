@@ -201,10 +201,7 @@
     <ClInclude Include="..\..\tiny_dnn\util\functions\deform.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tiny_dnn\util\graph_visualizer.h">
-      <Filter>util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\tiny_dnn\util\image.h">
+    <ClInclude Include="..\..\tiny_dnn\util\image\image.h">
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tiny_dnn\util\functions\weight_init.h">

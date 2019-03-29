@@ -38,6 +38,6 @@
 #include "tiny_dnn/util/functions/functions.h"
 
 #ifdef DNN_USE_IMAGE_API
-#include "tiny_dnn/util/image.h"
+#include "tiny_dnn/util/image/image.h"
 #endif
 
