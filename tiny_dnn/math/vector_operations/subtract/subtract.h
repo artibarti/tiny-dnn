@@ -2,7 +2,6 @@
 
 #include <stdexcept>
 
-#include "tiny_dnn/core/backend.h"
 #include "tiny_dnn/util/error/nn_error.h"
 #include "tiny_dnn/util/types/types.h"
 #include "tiny_dnn/math/vector_operations/operations/operations.h"

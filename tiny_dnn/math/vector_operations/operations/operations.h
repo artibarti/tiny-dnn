@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "tiny_dnn/core/backend.h"
+#include "tiny_dnn/util/types/types.h"
 
 namespace tiny_dnn {
   namespace math {

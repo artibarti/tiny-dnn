@@ -8,4 +8,6 @@
 #include "tiny_dnn/util/functions/math_functions.h"
 #include "tiny_dnn/util/functions/weight_init.h"
 #include "tiny_dnn/util/functions/target_cost.h"
+#include "tiny_dnn/util/functions/util_functions.h"
+
 #include "tiny_dnn/util/functions/lossfunctions/loss_function.h"

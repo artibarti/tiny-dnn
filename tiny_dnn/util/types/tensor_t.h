@@ -1,43 +1,15 @@
 #pragma once
 
-namespace tiny_dnn {
+#include <iostream>
 
-#ifdef CNN_USE_DOUBLE
- typedef double float_t;
-#else
- typedef float float_t;
-#endif
+#include "tiny_dnn/util/types/aligned_allocator.h"
+#include "tiny_dnn/util/types/float_t.h"
+#include "tiny_dnn/util/types/index2d.h"
+
+namespace tiny_dnn {
 
 using vec_t = std::vector<float_t, aligned_allocator<float_t, 64>>;
 using tensor_t = std::vector<vec_t>;
-
-struct shape2d
-{
-    unsigned x, y;
-
-    shape2d() : x(0), y(0) {}
-    shape2d(unsigned _x, unsigned _y) : x(_x), y(_y) {}
-            
-    bool operator==(const shape2d& other) {
-        return (x == other.x && y == other.y);
-    }    
-    bool operator!=(const shape2d& other) {
-        return !(x == other.x && y == other.y);
-    }
-    bool operator==(unsigned size) {
-        return (x == size && y == size);
-    }    
-
-    unsigned operator[] (unsigned index) {
-        if (index == 0) {
-            return x;
-        } else if (index == 1) {
-            return y;
-        } else {
-            throw std::out_of_range("Index out of bounds");
-        }
-    }
-};
 
 shape2d getDimension(const tensor_t& tensor) {
     if (tensor.size() != 0) {

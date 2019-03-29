@@ -15,12 +15,7 @@
 
 #include "tiny_dnn/core/kernels/conv2d_grad_op.h"
 #include "tiny_dnn/core/kernels/conv2d_op.h"
-
 #include "tiny_dnn/util/util.h"
-
-#ifdef DNN_USE_IMAGE_API
-#include "tiny_dnn/util/image.h"
-#endif  // DNN_USE_IMAGE_API
 
 namespace tiny_dnn {
 

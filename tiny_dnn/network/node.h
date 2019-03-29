@@ -17,13 +17,9 @@
 #include <unordered_set>
 #include <vector>
 
+#include "tiny_dnn/util/util.h"
 #include "tiny_dnn/optimizers/optimizer.h"
 #include "tiny_dnn/util/functions/functions.h"
-#include "tiny_dnn/util/util.h"
-
-#ifdef DNN_USE_IMAGE_API
-#include "tiny_dnn/util/image.h"
-#endif
 
 namespace tiny_dnn {
 
