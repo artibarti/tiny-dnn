@@ -12,7 +12,7 @@
 #include "tiny_dnn/activations/tanh_layer.h"
 #include "tiny_dnn/core/kernels/gru_cell_grad_op.h"
 #include "tiny_dnn/core/kernels/gru_cell_op.h"
-#include "tiny_dnn/layers/cell.h"
+#include "tiny_dnn/network/layers/cell.h"
 
 namespace tiny_dnn {
 

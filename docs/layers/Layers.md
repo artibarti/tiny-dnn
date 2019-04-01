@@ -1,7 +1,7 @@
 # Layers
 
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/arithmetic_layer.h#L36)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/arithmetic_layer.h#L36)</span>
 ## elementwise_add_layer
 
 element-wise add N vectors ```y_i = x0_i + x1_i + ... + xnum_i```
@@ -16,7 +16,7 @@ element-wise add N vectors ```y_i = x0_i + x1_i + ... + xnum_i```
 
 - **num_args** number of inputs
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/average_pooling_layer.h#L136)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/average_pooling_layer.h#L136)</span>
 ## average_pooling_layer
 
 average pooling with trainable weights
@@ -83,7 +83,7 @@ average pooling with trainable weights
 
 - **stride_y** interval at which to apply the filters to the input
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/average_unpooling_layer.h#L134)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/average_unpooling_layer.h#L134)</span>
 ## average_unpooling_layer
 
 average pooling with trainable weights
@@ -123,7 +123,7 @@ average pooling with trainable weights
 
 - **pooling_size** factor by which to upscale
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/batch_normalization_layer.h#L42)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/batch_normalization_layer.h#L42)</span>
 ## batch_normalization_layer
 
 Batch Normalization
@@ -165,7 +165,7 @@ Batch Normalization
 
 - **epsilon** small positive value to avoid zero-division
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/concat_layer.h#L44)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/concat_layer.h#L44)</span>
 ## concat_layer
 
 concat N layers along depth
@@ -194,7 +194,7 @@ concat N layers along depth
 
 - **num_args** number of input tensors
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/convolutional_layer.h#L52)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/convolutional_layer.h#L52)</span>
 ## convolutional_layer
 
 2D convolution layer
@@ -355,7 +355,7 @@ concat N layers along depth
 
 - **in_width** input image width
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/deconvolutional_layer.h#L54)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/deconvolutional_layer.h#L54)</span>
 ## deconvolutional_layer
 
 2D deconvolution layer
@@ -508,7 +508,7 @@ concat N layers along depth
 
 - **in_width** input image width
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/dropout_layer.h#L37)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/dropout_layer.h#L37)</span>
 ## dropout_layer
 
 applies dropout to the input
@@ -525,14 +525,14 @@ applies dropout to the input
 
 - **in_dim** number of elements of the input
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/feedforward_layer.h#L37)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/feedforward_layer.h#L37)</span>
 ## feedforward_layer
 
 single-input, single-output network with activation function
 
 ### Constructors
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/fully_connected_layer.h#L39)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/fully_connected_layer.h#L39)</span>
 ## fully_connected_layer
 
 compute fully-connected(matmul) operation
@@ -552,12 +552,12 @@ compute fully-connected(matmul) operation
 
 - **in_dim** number of elements of the input
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/input_layer.h#L32)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/input_layer.h#L32)</span>
 ## input_layer
 
 ### Constructors
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/linear_layer.h#L38)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/linear_layer.h#L38)</span>
 ## linear_layer
 
 element-wise operation: ```f(x) = h(scale*x+bias)```
@@ -574,7 +574,7 @@ element-wise operation: ```f(x) = h(scale*x+bias)```
 
 - **bias** bias term
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/lrn_layer.h#L42)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/lrn_layer.h#L42)</span>
 ## lrn_layer
 
 local response normalization
@@ -621,7 +621,7 @@ local response normalization
 
 - **in_width** the width of input data
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/max_pooling_layer.h#L53)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/max_pooling_layer.h#L53)</span>
 ## max_pooling_layer
 
 ### Constructors
@@ -664,7 +664,7 @@ local response normalization
 
 - **pooling_size** factor by which to downscale
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/max_unpooling_layer.h#L38)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/max_unpooling_layer.h#L38)</span>
 ## max_unpooling_layer
 
 ### Constructors
@@ -702,12 +702,12 @@ local response normalization
 
 - **unpooling_size** factor by which to upscale
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/partial_connected_layer.h#L34)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/partial_connected_layer.h#L34)</span>
 ## partial_connected_layer
 
 ### Constructors
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/power_layer.h#L38)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/power_layer.h#L38)</span>
 ## power_layer
 
 element-wise pow: ```y = scale*x^factor```
@@ -734,7 +734,7 @@ element-wise pow: ```y = scale*x^factor```
 
 - **factor** floating-point number that specifies a power
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/quantized_convolutional_layer.h#L54)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/quantized_convolutional_layer.h#L54)</span>
 ## quantized_convolutional_layer
 
 2D convolution layer
@@ -887,7 +887,7 @@ element-wise pow: ```y = scale*x^factor```
 
 - **in_width** input image width
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/quantized_deconvolutional_layer.h#L54)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/quantized_deconvolutional_layer.h#L54)</span>
 ## quantized_deconvolutional_layer
 
 2D deconvolution layer
@@ -1040,7 +1040,7 @@ element-wise pow: ```y = scale*x^factor```
 
 - **in_width** input image width
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/quantized_fully_connected_layer.h#L37)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/quantized_fully_connected_layer.h#L37)</span>
 ## quantized_fully_connected_layer
 
 compute fully-connected(matmul) operation
@@ -1060,7 +1060,7 @@ compute fully-connected(matmul) operation
 
 - **in_dim** number of elements of the input
 
-<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/slice_layer.h#L42)</span>
+<span style="float:right;">[[source]](https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/slice_layer.h#L42)</span>
 ## slice_layer
 
 slice an input data into multiple outputs along a given slice dimension.

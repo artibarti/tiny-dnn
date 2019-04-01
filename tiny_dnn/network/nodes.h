@@ -18,7 +18,7 @@
   #include <cereal/types/utility.hpp>
 #endif
 
-#include "tiny_dnn/layers/layer.h"
+#include "tiny_dnn/network/layers/layer.h"
 #include "tiny_dnn/optimizers/optimizer.h"
 #include "tiny_dnn/util/util.h"
 

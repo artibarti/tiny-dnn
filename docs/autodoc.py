@@ -4,7 +4,7 @@ import glob
 import re
 import os
 
-ROOT = 'https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/layers/'
+ROOT = 'https://github.com/tiny-dnn/tiny-dnn/blob/master/tiny_dnn/network/layers/'
 
 # find class declarations
 # returns: [posision, classname]
@@ -87,7 +87,7 @@ def source_link(filename, content, pos):
     link = ROOT + os.path.basename(filename) + '#L' + str(linenum)
     return '[[source]](' + link + ')'
 
-files= glob.glob('../tiny_dnn/layers/*.h')
+files= glob.glob('../tiny_dnn/network/layers/*.h')
 
 docstring = ''
 

@@ -17,14 +17,14 @@
 
 #include "tiny_dnn/io/caffe/caffe.pb.h"
 
-#include "tiny_dnn/layers/average_pooling_layer.h"
-#include "tiny_dnn/layers/convolutional_layer.h"
-#include "tiny_dnn/layers/deconvolutional_layer.h"
-#include "tiny_dnn/layers/dropout_layer.h"
-#include "tiny_dnn/layers/fully_connected_layer.h"
-#include "tiny_dnn/layers/linear_layer.h"
-#include "tiny_dnn/layers/lrn_layer.h"
-#include "tiny_dnn/layers/max_pooling_layer.h"
+#include "tiny_dnn/network/layers/average_pooling_layer.h"
+#include "tiny_dnn/network/layers/convolutional_layer.h"
+#include "tiny_dnn/network/layers/deconvolutional_layer.h"
+#include "tiny_dnn/network/layers/dropout_layer.h"
+#include "tiny_dnn/network/layers/fully_connected_layer.h"
+#include "tiny_dnn/network/layers/linear_layer.h"
+#include "tiny_dnn/network/layers/lrn_layer.h"
+#include "tiny_dnn/network/layers/max_pooling_layer.h"
 
 typedef tiny_dnn::shape3d shape_t;
 

@@ -16,7 +16,7 @@
 #include <cereal/archives/json.hpp>
 #include <cereal/types/memory.hpp>
 
-#include "tiny_dnn/layers/layers.h"
+#include "tiny_dnn/network/layers/layers.h"
 #include "tiny_dnn/util/config/config.h"
 #include "tiny_dnn/util/error/nn_error.h"
 #include "tiny_dnn/serialization/serialization_functions.h"
