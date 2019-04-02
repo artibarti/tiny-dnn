@@ -8,7 +8,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "tiny_dnn/activations/tanh_layer.h"
+#include "tiny_dnn/network/activations/tanh_layer.h"
 #include "tiny_dnn/core/kernels/rnn_cell_grad_op.h"
 #include "tiny_dnn/core/kernels/rnn_cell_op.h"
 #include "tiny_dnn/network/layers/cell.h"

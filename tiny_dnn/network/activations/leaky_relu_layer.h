@@ -10,7 +10,7 @@
 #include <string>
 #include <utility>
 
-#include "tiny_dnn/activations/activation_layer.h"
+#include "tiny_dnn/network/activations/activation_layer.h"
 #include "tiny_dnn/network/layers/layer.h"
 
 namespace tiny_dnn {
